@@ -11,6 +11,7 @@ import { DifficultyMeter } from "@/components/ui/DifficultyMeter";
 import { PasswordGateForm } from "@/components/animals/PasswordGateForm";
 import { VideoSectionAccordion } from "@/components/animals/VideoSectionAccordion";
 import { PdfDownloadButton } from "@/components/animals/PdfDownloadButton";
+import { UnlockedCelebration } from "@/components/animals/UnlockedCelebration";
 
 type Props = { params: Promise<{ animalSlug: string }> };
 
@@ -76,6 +77,7 @@ export default async function AnimalPage({ params }: Props) {
           <div className="mt-4 flex flex-col gap-6">
             <VideoSectionAccordion sections={secure.sections} />
             <PdfDownloadButton slug={animal.slug} />
+            <UnlockedCelebration animalName={animal.name} />
           </div>
         ) : (
           <div className="mt-4">

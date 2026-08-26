@@ -6,6 +6,8 @@ export const WHATSAPP_PHONE_NUMBER =
 export const DEFAULT_WHATSAPP_MESSAGE =
   "¡Hola! Tengo una consulta sobre los kits de crochet de HOOKMI 🧶";
 
+export const SUPPORT_EMAIL = "ayuda@hookmi.com";
+
 export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/productos", label: "Productos" },
