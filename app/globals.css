@@ -2,25 +2,35 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2b2b2b;
+
+  --color-hookmi-yellow: #ffde21;
+  --color-hookmi-yellow-dark: #e6c700;
+  --color-hookmi-ink: #2b2b2b;
+  --color-hookmi-cream: #fff9e8;
+  --color-hookmi-coral: #ff6f61;
+  --color-hookmi-mint: #a8e6ce;
+  --color-hookmi-whatsapp: #25d366;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-hookmi-yellow: var(--color-hookmi-yellow);
+  --color-hookmi-yellow-dark: var(--color-hookmi-yellow-dark);
+  --color-hookmi-ink: var(--color-hookmi-ink);
+  --color-hookmi-cream: var(--color-hookmi-cream);
+  --color-hookmi-coral: var(--color-hookmi-coral);
+  --color-hookmi-mint: var(--color-hookmi-mint);
+  --color-hookmi-whatsapp: var(--color-hookmi-whatsapp);
+
+  --font-heading: var(--font-baloo);
+  --font-sans: var(--font-nunito);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), Arial, Helvetica, sans-serif;
 }

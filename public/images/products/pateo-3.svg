@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="32" fill="#A8E6CE"/>
+  <ellipse cx="200" cy="250" rx="105" ry="85" fill="#FFDE21"/>
+  <path d="M120 250 Q90 275 115 310 Q150 295 148 255 Z" fill="#F2CE00"/>
+  <circle cx="205" cy="140" r="68" fill="#FFDE21"/>
+  <path d="M255 150 Q305 145 302 168 Q300 185 253 178 Z" fill="#FF6F61"/>
+  <circle cx="222" cy="128" r="9" fill="#2B2B2B"/>
+  <text x="200" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#2B2B2B">Pateo — kit completo</text>
+</svg>

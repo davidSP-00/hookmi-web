@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="32" fill="#A8E6CE"/>
+  <circle cx="135" cy="105" r="42" fill="#FF6F61"/>
+  <circle cx="265" cy="105" r="42" fill="#FF6F61"/>
+  <circle cx="135" cy="105" r="20" fill="#A8E6CE"/>
+  <circle cx="265" cy="105" r="20" fill="#A8E6CE"/>
+  <circle cx="200" cy="195" r="95" fill="#FF6F61"/>
+  <circle cx="172" cy="185" r="13" fill="#2B2B2B"/>
+  <circle cx="228" cy="185" r="13" fill="#2B2B2B"/>
+  <circle cx="200" cy="210" r="9" fill="#2B2B2B"/>
+  <path d="M195 212 L145 202 M195 216 L145 218 M198 222 L150 235" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M205 212 L255 202 M205 216 L255 218 M202 222 L250 235" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <text x="200" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#2B2B2B">Henry — kit completo</text>
+</svg>

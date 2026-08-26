@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" rx="32" fill="#FFF9E8"/>
+  <path d="M100 210 A100 100 0 0 1 300 210 L300 320 Q275 340 250 320 Q225 340 200 320 Q175 340 150 320 Q125 340 100 320 Z" fill="#A8E6CE"/>
+  <ellipse cx="170" cy="215" rx="11" ry="15" fill="#2B2B2B"/>
+  <ellipse cx="230" cy="215" rx="11" ry="15" fill="#2B2B2B"/>
+  <circle cx="200" cy="250" r="10" fill="#2B2B2B"/>
+  <text x="200" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#2B2B2B">Boo</text>
+</svg>
