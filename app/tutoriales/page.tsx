@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 export const metadata: Metadata = {
   title: "Tutoriales — HOOKMI",
   description:
-    "Aprende las técnicas básicas de crochet gratis y desbloquea el tutorial completo de tu animal con la contraseña de tu kit.",
+    "Aprende las técnicas básicas de crochet gratis y desbloquea el tutorial completo con el código de tu kit.",
 };
 
 export default function TutorialesPage() {
@@ -28,7 +28,7 @@ export default function TutorialesPage() {
         <SectionHeading
           eyebrow="Tutoriales por kit"
           title="Elige tu animal"
-          description="Cada animal tiene sus tutoriales completos protegidos por la contraseña incluida en su kit."
+          description="Cada pieza tiene sus tutoriales completos protegidos por el código incluido en su kit."
         />
 
         <div className="mt-12">

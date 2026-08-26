@@ -16,7 +16,7 @@ const VALUES = [
   {
     icon: Video,
     title: "Tutoriales claros",
-    description: "Videos paso a paso divididos por partes del animal, para que avances a tu propio ritmo cuantas veces lo necesites.",
+    description: "Videos paso a paso divididos por partes de tu HOOKMI, para que avances a tu propio ritmo cuantas veces lo necesites.",
   },
   {
     icon: PackageCheck,

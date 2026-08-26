@@ -1,4 +1,5 @@
-import { Award, Gauge, MessageCircle, Package, Sparkles, Video } from "lucide-react";
+import type { Metadata } from "next";
+import { Gauge, LifeBuoy, MessageCircle, Package, Sparkles, Video } from "lucide-react";
 import { products } from "@/content/products";
 import { animals } from "@/content/animals";
 import { ProductGrid } from "@/components/products/ProductGrid";
@@ -6,6 +7,11 @@ import { AnimalGrid } from "@/components/animals/AnimalGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+
+export const metadata: Metadata = {
+  description:
+    "Kits de crochet coleccionables para principiantes: todo el material incluido, tutoriales en video paso a paso y un pin + stickers exclusivos en cada kit. Teje tu primer amigurumi hoy, sin experiencia previa.",
+};
 
 export default function HomePage() {
   return (
@@ -21,9 +27,10 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-xl text-lg text-hookmi-ink/80">
-            Cada kit HOOKMI es una pieza de colección numerada: trae todo lo que
-            necesitas para tejerla desde cero, más stickers exclusivos y un pin
-            coleccionable único. Sin experiencia previa, a tu ritmo.
+            No es solo un amigurumi: es tu próxima pieza de colección. Cada kit trae
+            todo lo que necesitas para tejerlo desde cero —lana, herramientas y
+            tutoriales en video. Sin experiencia previa, a tu ritmo,
+            hoy mismo.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -45,16 +52,16 @@ export default function HomePage() {
             </div>
             <div className="flex flex-col items-center gap-2 text-center">
               <Gauge className="text-hookmi-coral" size={22} />
-              <p className="text-sm font-bold text-hookmi-ink">Dificultad a la vista</p>
+              <p className="text-sm font-bold text-hookmi-ink">Nivel de dificultad claro</p>
               <p className="text-xs text-hookmi-ink/70">
-                Cada pieza indica su nivel: principiante, intermedio o avanzado.
+                Sabes qué tan fácil o retador es cada pieza antes de elegir, sin sorpresas a mitad de camino.
               </p>
             </div>
             <div className="flex flex-col items-center gap-2 text-center">
-              <Award className="text-hookmi-coral" size={22} />
-              <p className="text-sm font-bold text-hookmi-ink">Pieza de colección</p>
+              <LifeBuoy className="text-hookmi-coral" size={22} />
+              <p className="text-sm font-bold text-hookmi-ink">Ayuda cuando la necesites</p>
               <p className="text-xs text-hookmi-ink/70">
-                Stickers exclusivos y pin coleccionable único en cada kit.
+                ¿Te atoras en un paso? Escríbenos por WhatsApp o email y te acompañamos hasta terminar tu pieza.
               </p>
             </div>
           </div>
@@ -82,7 +89,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Tutoriales"
             title="Mira cómo se teje cada animal"
-            description="Aprende las técnicas básicas gratis y luego desbloquea el tutorial completo de tu animal con la contraseña de tu kit."
+            description="Aprende las técnicas básicas gratis y luego desbloquea el tutorial completo con el código de tu kit."
           />
           <div className="mt-12">
             <AnimalGrid animals={animals.slice(0, 3)} />

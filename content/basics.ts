@@ -1,5 +1,5 @@
 // Tutoriales gratuitos de técnicas básicas, visibles para cualquier visitante
-// (no están atados a la compra de ningún kit ni requieren contraseña).
+// (no están atados a la compra de ningún kit ni requieren código).
 
 export type BasicTutorial = {
   id: string;

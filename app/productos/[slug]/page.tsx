@@ -40,7 +40,7 @@ export default async function ProductoDetailPage({ params }: Props) {
           alt={product.name}
           overlay={
             <span className="absolute left-4 top-4 z-10 rounded-full bg-hookmi-ink px-3 py-1 text-xs font-bold text-white">
-              Colección {product.collectionNumber}
+              {product.collectionNumber}
             </span>
           }
         />

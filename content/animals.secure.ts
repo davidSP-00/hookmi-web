@@ -4,8 +4,12 @@ import "server-only";
 // ni desde `content/animals.ts`. Solo lo deben leer las Route Handlers
 // en app/api/unlock y app/api/pdf/[slug].
 //
-// Para generar el hash de una contraseña nueva:
-//   node scripts/hash-password.mjs "miContraseña"
+// Para generar el hash de un código nuevo:
+//   node scripts/hash-password.mjs "XXXX-XXXX"
+//
+// El código que ingresa el cliente sigue el patrón XXXX-XXXX (letras/números
+// en mayúscula, ver components/animals/PasswordGateForm.tsx). El hash debe
+// generarse a partir del código completo, incluyendo el guion.
 
 export type AnimalSecureSection = {
   title: string; // debe calzar 1:1 en orden y cantidad con `sectionsMeta` en content/animals.ts
@@ -22,9 +26,9 @@ export type AnimalSecure = {
 export const animalsSecure: AnimalSecure[] = [
   {
     slug: "henry-001",
-    // contraseña de demo: henry2024
+    // código de demo: HNRY-0001
     passwordHash:
-      "d2ddaf3cb08eec89c9d90cd4da30397f:fe35dc2b376437add7dab3e65ef014267c00c1ed7704aece4780c82217350950ddd5c28649db8b422fa7c4676ad07213827a2c92e8b7f253b8ddbf874999ccbb",
+      "f11fa233982557b6ae139eb510af92e2:02143b5f39b256b12fdba803ff13057225c1e4f7d54a3378ea910805f3f0fb0b6624d880c8d15f7786bd50ed05c8e479abea2b924ea703613678fafbecdaa6a9",
     sections: [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_cuerpo" },
       { title: "Orejas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_orejas" },
@@ -34,9 +38,9 @@ export const animalsSecure: AnimalSecure[] = [
   },
   {
     slug: "pateo-002",
-    // contraseña de demo: pateo2024
+    // código de demo: PATO-0002
     passwordHash:
-      "323e29e5439b256c3c8ac6e830e032cf:81a553eef77256c4a238564c122e065abd8af57fcb5eb9571db901f0cf4368878ae9be607112053546e56ce443e681dc85fcb090150d983d28d5c4c8e0c58108",
+      "ab7506ed665fca8bf996f2538bcb8bbd:3336f9854cedf67178884c04e99d63a348c6bf88c50af24dc2a87f62c12f8260c8ea17b78b066cc1d8bc5f034c0045a062d973eff984712d78f8659d3e834f71",
     sections: [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_cuerpo" },
       { title: "Alas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_alas" },
@@ -46,9 +50,9 @@ export const animalsSecure: AnimalSecure[] = [
   },
   {
     slug: "boo-003",
-    // contraseña de demo: boo2024
+    // código de demo: BOOO-0003
     passwordHash:
-      "3819101a9c323680dfdaabd2b5e99de1:f5ab08f9c6f78ce384f6a323ae5e4d745f9b6691a66bfcc732ab6284384bec928aba77b6006d4a57947c0b1ddd5f63cf1dae32ccec071cd33e5327861d834e2f",
+      "10d006629ea9ee0f2cbaada83231d734:d6a9ae771442859b5842c7fae2116fa235f00dafd7403be029ac9f9e67b2841195dccd51aef24e81023c6293ee789cf4738e79a0ebb049f91deaa4bc932f9e75",
     sections: [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_boo_cuerpo" },
       { title: "Ojos", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_boo_ojos" },

@@ -30,6 +30,9 @@ export function UnlockedCelebration({ animalName }: { animalName: string }) {
           </a>
           .
         </p>
+        <p className="mt-2 text-sm font-semibold text-hookmi-coral">
+          Siempre estamos para ayudarte <span aria-hidden="true">❤️</span>
+        </p>
       </div>
 
       <div className="rounded-3xl bg-hookmi-yellow p-8 text-center">

@@ -15,8 +15,8 @@ const FAQS = [
     answer: "Elige tu kit favorito en la sección de productos y presiona \"Comprar por WhatsApp\". Te ayudamos a coordinar el pago y el envío por ese medio.",
   },
   {
-    question: "¿Dónde encuentro la contraseña de mis videos?",
-    answer: "Viene impresa dentro de la caja de tu kit. Ingrésala en la página del animal correspondiente para desbloquear todos los tutoriales y el PDF.",
+    question: "¿Dónde encuentro el código de mis videos?",
+    answer: "Está en la tarjeta que viene dentro de la caja de tu kit, con el formato XXXX-XXXX. Ingrésalo en la página de tu HOOKMI para desbloquear todos los tutoriales y el PDF.",
   },
   {
     question: "¿Cuánto demora el envío?",

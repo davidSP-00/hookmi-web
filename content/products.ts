@@ -20,11 +20,14 @@ export type Product = {
 
 const BASE_KIT_ITEMS = [
   "Lana antialérgica premium",
-  "Crochet (aguja de tejer)",
+  "Crochet ergonómico de 4mm",
   "Aguja lanera para armar",
   "Ojos de seguridad",
-  "Separador de puntos",
+  "Separador de puntos (marcador)",
   "Relleno de fibra siliconada",
+  "Videos tutoriales paso a paso",
+  "Patrón de instrucciones en PDF descargable",
+  "Ayuda por WhatsApp o email cuando la necesites",
 ];
 
 export const products: Product[] = [

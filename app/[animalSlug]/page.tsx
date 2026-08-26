@@ -82,7 +82,7 @@ export default async function AnimalPage({ params }: Props) {
         ) : (
           <div className="mt-4">
             <p className="text-hookmi-ink/70">
-              Ingresa la contraseña incluida en tu kit para desbloquear los videos de{" "}
+              Ingresa el código incluido en tu kit para desbloquear los videos de{" "}
               {animal.sectionsMeta.map((section) => section.title).join(", ")} y el PDF de
               instrucciones.
             </p>

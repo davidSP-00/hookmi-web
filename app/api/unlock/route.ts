@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   const secure = getAnimalSecureBySlug(slug);
 
   if (!secure || !verifyPassword(password, secure.passwordHash)) {
-    return NextResponse.json({ ok: false, error: "Contraseña incorrecta." }, { status: 401 });
+    return NextResponse.json({ ok: false, error: "Código incorrecto." }, { status: 401 });
   }
 
   const token = await signUnlockToken(slug);

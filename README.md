@@ -1,6 +1,6 @@
 # HOOKMI — Sitio web
 
-Ecommerce sin carrito (venta por WhatsApp) + tutoriales de crochet con videos y PDF protegidos por contraseña.
+Ecommerce sin carrito (venta por WhatsApp) + tutoriales de crochet con videos y PDF protegidos por un código de kit (formato `XXXX-XXXX`).
 
 ## Desarrollo local
 
@@ -26,9 +26,9 @@ Edita `content/products.ts` y agrega un objeto al arreglo `products`. Si el prod
 
 ## Cómo agregar un animal/tutorial nuevo
 
-1. Genera el hash de la contraseña del kit:
+1. Genera el hash del código del kit (formato `XXXX-XXXX`, letras/números en mayúscula):
    ```bash
-   node scripts/hash-password.mjs "contraseñaDelKit"
+   node scripts/hash-password.mjs "ABCD-1234"
    ```
 2. Agrega la parte **pública** en `content/animals.ts` (`sectionsMeta` solo lleva los títulos de las secciones, ej. Cuerpo/Manos/Pies).
 3. Agrega la parte **privada** en `content/animals.secure.ts` con el mismo `slug`, el hash generado, las URLs reales de cada video (YouTube/Vimeo en modo no listado) y el nombre del archivo PDF.
@@ -43,7 +43,7 @@ El proyecto viene con 3 animales de ejemplo (Henry el Ratón, Pateo el Pato, Boo
 - Imágenes SVG placeholder en `public/images/`
 - Videos de YouTube de marcador de posición (secciones protegidas con URLs `REEMPLAZAR_...` que no funcionan — hay que reemplazarlas por videos reales)
 - PDFs de muestra generados automáticamente en `private/pdfs/`
-- Contraseñas de demo: `henry2024`, `pateo2024`, `boo2024`
+- Códigos de demo (formato `XXXX-XXXX`): `HNRY-0001`, `PATO-0002`, `BOOO-0003`
 
 Reemplaza todo esto por contenido real antes de lanzar el sitio a producción.
 
@@ -60,4 +60,4 @@ Reemplaza todo esto por contenido real antes de lanzar el sitio a producción.
 - `npm run build` — build de producción
 - `npm run start` — sirve el build de producción localmente
 - `npm run lint` — ESLint
-- `node scripts/hash-password.mjs "contraseña"` — genera el hash para `animals.secure.ts`
+- `node scripts/hash-password.mjs "XXXX-XXXX"` — genera el hash para `animals.secure.ts`
