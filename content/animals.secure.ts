@@ -26,9 +26,9 @@ export type AnimalSecure = {
 export const animalsSecure: AnimalSecure[] = [
   {
     slug: "henry-001",
-    // código de demo: HNRY-0001
+    // código: K9X7-P2M4
     passwordHash:
-      "f11fa233982557b6ae139eb510af92e2:02143b5f39b256b12fdba803ff13057225c1e4f7d54a3378ea910805f3f0fb0b6624d880c8d15f7786bd50ed05c8e479abea2b924ea703613678fafbecdaa6a9",
+      "6f9b9c47f41829cff9bfb7eddecd1559:a57166e688fcf716fd8e3fd7deb329ddaabd32d5ca553cad4cdea46ecece8006dc0f539652a3b9295b250f1fcb916ad1cc1436799b99105fab73ffe0fb1e4d62",
     sections: [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_cuerpo" },
       { title: "Orejas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_orejas" },
@@ -38,9 +38,9 @@ export const animalsSecure: AnimalSecure[] = [
   },
   {
     slug: "pateo-002",
-    // código de demo: PATO-0002
+    // código: U78Q-L3A2
     passwordHash:
-      "ab7506ed665fca8bf996f2538bcb8bbd:3336f9854cedf67178884c04e99d63a348c6bf88c50af24dc2a87f62c12f8260c8ea17b78b066cc1d8bc5f034c0045a062d973eff984712d78f8659d3e834f71",
+      "0a2058dc4862a6d8c4799f7018388875:7041d17b51860c9a8d19d4682129b526192618b490672fe4926f127de951277b542b32ef82ead76668d5838b696ef34878c7ce6f97fe99f44dc8e7b10aa69191",
     sections: [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_cuerpo" },
       { title: "Alas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_alas" },
