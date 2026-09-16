@@ -5,7 +5,7 @@ export function buildWhatsAppLink(message: string = DEFAULT_WHATSAPP_MESSAGE): s
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
 
-// Formatea el número para mostrarlo en texto, ej. "+51 921 766 751"
+// Formatea el número para mostrarlo en texto, ej. "+51 922 007 912"
 export function formatWhatsAppDisplay(): string {
   const digits = WHATSAPP_PHONE_NUMBER.replace(/\D/g, "");
   if (digits.length === 11) {

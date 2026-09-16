@@ -1,7 +1,7 @@
 export const SITE_NAME = "HOOKMI";
 
 export const WHATSAPP_PHONE_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_PHONE_NUMBER ?? "51921766751";
+  process.env.NEXT_PUBLIC_WHATSAPP_PHONE_NUMBER ?? "51922007912";
 
 export const DEFAULT_WHATSAPP_MESSAGE =
   "¡Hola! Tengo una consulta sobre los kits de crochet de HOOKMI 🧶";
@@ -16,12 +16,10 @@ export const NAV_LINKS = [
   { href: "/contacto", label: "Contacto" },
 ] as const;
 
-// TODO: reemplazar por los perfiles reales de HOOKMI antes de publicar.
 export const SOCIAL_LINKS = {
-  instagram: "https://instagram.com/hookmi",
-  facebook: "https://facebook.com/hookmi",
-  tiktok: "https://tiktok.com/@hookmi",
-  youtube: "https://youtube.com/@hookmi",
+  instagram: "https://instagram.com/hookmi.pe",
+  facebook: "https://facebook.com/hookmi.pe",
+  tiktok: "https://tiktok.com/@hookmi.pe",
 } as const;
 
 export const RESERVED_SLUGS = [

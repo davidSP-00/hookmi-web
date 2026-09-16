@@ -36,15 +36,15 @@ export const products: Product[] = [
     slug: "henry",
     name: "Henry el Ratón",
     collectionNumber: "N.º 001",
-    price: 60,
+    price: 69,
     currency: "PEN",
     shortDescription:
-      "La pieza N.º 001 de la colección HOOKMI: un ratoncito de orejas redondas y bigotes traviesos.",
+      "La pieza N.º 001 de la colección HOOKMI: un ratoncito gordito que vive enamorado del queso.",
     description:
-      "Conoce a Henry, la primera pieza de la colección HOOKMI. Este kit coleccionable trae todo lo que necesitas para tejer tu propio ratoncito de crochet desde cero, sin experiencia previa: lana antialérgica, herramientas y tutoriales en video para cada parte de su cuerpo. Al terminarlo no solo tendrás un amigurumi hecho por ti, sino también tu pin y stickers exclusivos de Henry para lucir en tu mochila, agenda o donde quieras.",
+      "Henry es el ratoncito más goloso de la colección HOOKMI: vive obsesionado con el queso y las siestas después de comer. Este kit coleccionable trae todo lo que necesitas para tejerlo desde cero, sin experiencia previa, más tu pin y stickers exclusivos de Henry.",
     images: [
-      "/images/products/henry.svg",
-      "/images/products/henry-2.svg",
+      "/images/products/henry.jpg",
+      "/images/products/henry-2.jpg",
       "/images/products/henry-3.svg",
     ],
     difficulty: 1,
@@ -52,6 +52,7 @@ export const products: Product[] = [
       ...BASE_KIT_ITEMS,
       "Stickers exclusivos de Henry",
       "Pin coleccionable de Henry",
+      "Carta coleccionable de Henry",
     ],
     whatsappMessage: "¡Hola! Quiero comprar el kit coleccionable de Henry el Ratón (N.º 001) 🐭",
     animalSlug: "henry-001",
@@ -63,15 +64,15 @@ export const products: Product[] = [
     slug: "pateo",
     name: "Pateo el Pato",
     collectionNumber: "N.º 002",
-    price: 65,
+    price: 69,
     currency: "PEN",
     shortDescription:
-      "La pieza N.º 002 de la colección HOOKMI: un patito con un pico enorme de personalidad.",
+      "La pieza N.º 002 de la colección HOOKMI: un patito relajado que hace amigos por donde pasa.",
     description:
-      "Pateo es la segunda pieza de la colección HOOKMI: un pato tierno con un pico grande y unas alas curiosas que le dan todo su carácter. El kit trae absolutamente todo lo necesario para tejerlo —lana antialérgica, herramientas y tutoriales paso a paso— más sus stickers exclusivos y el pin coleccionable de Pateo, pensados para que cada kit se sienta como una pieza única que quieras coleccionar.",
+      "Pateo es el pato más sociable de la colección HOOKMI: le encanta pescar sin apuro y hacer amigos con quien se le acerque. Este kit coleccionable trae todo lo que necesitas para tejerlo desde cero, sin experiencia previa, más tu pin y stickers exclusivos de Pateo.",
     images: [
-      "/images/products/pateo.svg",
-      "/images/products/pateo-2.svg",
+      "/images/products/pateo.jpg",
+      "/images/products/pateo-kit.jpg",
       "/images/products/pateo-3.svg",
     ],
     difficulty: 1,
@@ -79,37 +80,12 @@ export const products: Product[] = [
       ...BASE_KIT_ITEMS,
       "Stickers exclusivos de Pateo",
       "Pin coleccionable de Pateo",
+      "Carta coleccionable de Pateo",
     ],
     whatsappMessage: "¡Hola! Quiero comprar el kit coleccionable de Pateo el Pato (N.º 002) 🦆",
     animalSlug: "pateo-002",
     inStock: true,
     tags: ["favorito"],
-  },
-  {
-    id: "prod-boo-003",
-    slug: "boo",
-    name: "Boo el Fantasma",
-    collectionNumber: "N.º 003",
-    price: 70,
-    currency: "PEN",
-    shortDescription:
-      "La pieza N.º 003 de la colección HOOKMI: un fantasmita adorable, más dulce que espeluznante.",
-    description:
-      "Boo es la tercera pieza de la colección HOOKMI: un fantasma de forma redondeada y mirada tierna, ideal para coleccionar todo el año. El kit incluye todas las herramientas y materiales para armarlo de principio a fin, tutoriales completos en video, y por supuesto, sus stickers exclusivos y pin coleccionable de Boo para sumar a tu colección.",
-    images: [
-      "/images/products/boo.svg",
-      "/images/products/boo-2.svg",
-      "/images/products/boo-3.svg",
-    ],
-    difficulty: 1,
-    kitIncludes: [
-      ...BASE_KIT_ITEMS,
-      "Stickers exclusivos de Boo",
-      "Pin coleccionable de Boo",
-    ],
-    whatsappMessage: "¡Hola! Quiero comprar el kit coleccionable de Boo el Fantasma (N.º 003) 👻",
-    animalSlug: "boo-003",
-    inStock: true,
   },
 ];
 

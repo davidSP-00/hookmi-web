@@ -32,7 +32,13 @@ export const animalsSecure: AnimalSecure[] = [
     sections: [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_cuerpo" },
       { title: "Orejas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_orejas" },
-      { title: "Cara", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_cara" },
+      { title: "Patas delanteras", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_patas_delanteras" },
+      { title: "Patas traseras", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_patas_traseras" },
+      { title: "Barriga", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_barriga" },
+      { title: "Nariz", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_nariz" },
+      { title: "Cola", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_cola" },
+      { title: "Cosiendo las partes", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_cosiendo_las_partes" },
+      { title: "Llavero (opcional)", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_henry_llavero" },
     ],
     pdfFile: "henry-001.pdf",
   },
@@ -45,20 +51,13 @@ export const animalsSecure: AnimalSecure[] = [
       { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_cuerpo" },
       { title: "Alas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_alas" },
       { title: "Pico", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_pico" },
+      { title: "Patas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_patas" },
+      { title: "Plumas", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_plumas" },
+      { title: "Barriga", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_barriga" },
+      { title: "Cosiendo las partes", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_cosiendo_las_partes" },
+      { title: "Llavero (opcional)", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_pateo_llavero" },
     ],
     pdfFile: "pateo-002.pdf",
-  },
-  {
-    slug: "boo-003",
-    // código de demo: BOOO-0003
-    passwordHash:
-      "10d006629ea9ee0f2cbaada83231d734:d6a9ae771442859b5842c7fae2116fa235f00dafd7403be029ac9f9e67b2841195dccd51aef24e81023c6293ee789cf4738e79a0ebb049f91deaa4bc932f9e75",
-    sections: [
-      { title: "Cuerpo", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_boo_cuerpo" },
-      { title: "Ojos", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_boo_ojos" },
-      { title: "Boca", videoUrl: "https://www.youtube.com/embed/REEMPLAZAR_boo_boca" },
-    ],
-    pdfFile: "boo-003.pdf",
   },
 ];
 

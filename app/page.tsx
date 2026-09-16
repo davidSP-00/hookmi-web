@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Gauge, LifeBuoy, MessageCircle, Package, Sparkles, Video } from "lucide-react";
+import { LifeBuoy, MessageCircle, Package, Sparkles, Video } from "lucide-react";
 import { products } from "@/content/products";
 import { animals } from "@/content/animals";
 import { ProductGrid } from "@/components/products/ProductGrid";
@@ -51,10 +51,10 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex flex-col items-center gap-2 text-center">
-              <Gauge className="text-hookmi-coral" size={22} />
-              <p className="text-sm font-bold text-hookmi-ink">Nivel de dificultad claro</p>
+              <Video className="text-hookmi-coral" size={22} />
+              <p className="text-sm font-bold text-hookmi-ink">Tutoriales en video bien explicados</p>
               <p className="text-xs text-hookmi-ink/70">
-                Sabes qué tan fácil o retador es cada pieza antes de elegir, sin sorpresas a mitad de camino.
+                Un video paso a paso para cada parte de tu amigurumi, fácil de seguir aunque sea tu primera vez.
               </p>
             </div>
             <div className="flex flex-col items-center gap-2 text-center">

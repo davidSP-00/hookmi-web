@@ -20,20 +20,36 @@ export function VideoSectionAccordion({ sections }: { sections: Section[] }) {
               className="flex w-full items-center justify-between bg-white px-5 py-4 text-left font-bold text-hookmi-ink"
               aria-expanded={isOpen}
             >
-              {section.title}
+              <span>
+                {index + 1}. {section.title}
+              </span>
               <ChevronDown className={`transition ${isOpen ? "rotate-180" : ""}`} size={20} />
             </button>
 
-            {/* El iframe solo se monta cuando la sección está abierta, para no cargar todos los videos a la vez */}
+            {/* El video/iframe solo se monta cuando la sección está abierta, para no cargar todos a la vez */}
             {isOpen && (
               <div className="aspect-video bg-black">
-                <iframe
-                  src={section.videoUrl}
-                  title={section.title}
-                  className="h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                {section.videoUrl.startsWith("/api/tutorial-video/") ? (
+                  <video
+                    key={section.videoUrl}
+                    src={section.videoUrl}
+                    title={section.title}
+                    className="h-full w-full"
+                    controls
+                    controlsList="nodownload noremoteplayback"
+                    disablePictureInPicture
+                    disableRemotePlayback
+                    onContextMenu={(event) => event.preventDefault()}
+                  />
+                ) : (
+                  <iframe
+                    src={section.videoUrl}
+                    title={section.title}
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                )}
               </div>
             )}
           </div>

@@ -39,11 +39,11 @@ Edita `content/products.ts` y agrega un objeto al arreglo `products`. Si el prod
 
 ## Reemplazar el contenido de demostración
 
-El proyecto viene con 3 animales de ejemplo (Henry el Ratón, Pateo el Pato, Boo el Fantasma) con:
+El proyecto viene con 2 animales de ejemplo (Henry el Ratón, Pateo el Pato) con:
 - Imágenes SVG placeholder en `public/images/`
 - Videos de YouTube de marcador de posición (secciones protegidas con URLs `REEMPLAZAR_...` que no funcionan — hay que reemplazarlas por videos reales)
 - PDFs de muestra generados automáticamente en `private/pdfs/`
-- Códigos de demo (formato `XXXX-XXXX`): `HNRY-0001`, `PATO-0002`, `BOOO-0003`
+- Códigos de demo (formato `XXXX-XXXX`): `HNRY-0001`, `PATO-0002`
 
 Reemplaza todo esto por contenido real antes de lanzar el sitio a producción.
 

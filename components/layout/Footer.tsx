@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { NAV_LINKS, SITE_NAME, SOCIAL_LINKS } from "@/lib/constants";
-import { FacebookIcon, InstagramIcon, TikTokIcon, YoutubeIcon } from "@/components/icons/SocialIcons";
+import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/icons/SocialIcons";
 
 const SOCIALS = [
   { name: "Instagram", href: SOCIAL_LINKS.instagram, Icon: InstagramIcon },
   { name: "Facebook", href: SOCIAL_LINKS.facebook, Icon: FacebookIcon },
   { name: "TikTok", href: SOCIAL_LINKS.tiktok, Icon: TikTokIcon },
-  { name: "YouTube", href: SOCIAL_LINKS.youtube, Icon: YoutubeIcon },
 ];
 
 export function Footer() {

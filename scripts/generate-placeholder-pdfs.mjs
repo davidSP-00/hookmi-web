@@ -63,15 +63,6 @@ const docs = [
       "Este es un PDF de muestra. Reemplazalo por las instrucciones reales.",
     ],
   },
-  {
-    file: "boo-003.pdf",
-    title: "HOOKMI - Instrucciones de Boo",
-    lines: [
-      "Kit: Boo el Fantasma",
-      "Secciones: Cuerpo, Ojos, Boca",
-      "Este es un PDF de muestra. Reemplazalo por las instrucciones reales.",
-    ],
-  },
 ];
 
 for (const doc of docs) {
