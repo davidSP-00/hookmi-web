@@ -13,7 +13,7 @@ export default function ProductosPage() {
     <div className="mx-auto max-w-6xl px-5 py-16">
       <SectionHeading
         eyebrow="Colección HOOKMI"
-        title="Elige tu próxima pieza"
+        title="Elige tu HOOKMI"
         description="Cada kit es una pieza numerada de la colección: trae todos los materiales y herramientas para tejerla, tutoriales paso a paso, y sus stickers + pin coleccionables exclusivos."
       />
 

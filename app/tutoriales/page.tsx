@@ -27,7 +27,7 @@ export default function TutorialesPage() {
       <div className="mt-24">
         <SectionHeading
           eyebrow="Tutoriales por kit"
-          title="Elige tu animal"
+          title="Elige tu HOOKMI"
           description="Cada pieza tiene sus tutoriales completos protegidos por el código incluido en su kit."
         />
 

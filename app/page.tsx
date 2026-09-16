@@ -71,7 +71,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-5 py-20">
         <SectionHeading
           eyebrow="Colección completa"
-          title="Elige tu próxima pieza"
+          title="Elige tu HOOKMI"
           description="Cada kit incluye materiales premium, herramientas, tutoriales y tus stickers + pin coleccionables exclusivos."
         />
         <div className="mt-12">
@@ -88,7 +88,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <SectionHeading
             eyebrow="Tutoriales"
-            title="Mira cómo se teje cada animal"
+            title="Mira cómo se teje cada HOOKMI"
             description="Aprende las técnicas básicas gratis y luego desbloquea el tutorial completo con el código de tu kit."
           />
           <div className="mt-12">

@@ -68,7 +68,10 @@ export default async function AnimalPage({ params }: Props) {
           </div>
 
           <div className="flex-1 text-center sm:text-left">
-            <h1 className="font-heading text-4xl font-bold text-hookmi-ink sm:text-5xl">
+            <span className="inline-block rounded-full bg-white/70 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hookmi-ink/70">
+              HOOKMI N.º {animal.code}
+            </span>
+            <h1 className="mt-2 font-heading text-4xl font-bold text-hookmi-ink sm:text-5xl">
               {animal.name}
             </h1>
             <p className="mx-auto mt-3 max-w-md text-hookmi-ink/80 sm:mx-0">{animal.description}</p>
