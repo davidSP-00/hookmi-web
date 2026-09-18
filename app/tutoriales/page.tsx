@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 export const metadata: Metadata = {
   title: "Tutoriales — HOOKMI",
   description:
-    "Aprende las técnicas básicas de crochet gratis y desbloquea el tutorial completo con el código de tu kit.",
+    "¿Nunca has tejido crochet? No te preocupes: aprende las técnicas básicas gratis y luego desbloquea el tutorial completo con el código de tu kit.",
 };
 
 export default function TutorialesPage() {
@@ -16,8 +16,8 @@ export default function TutorialesPage() {
     <div className="mx-auto max-w-6xl px-5 py-16">
       <SectionHeading
         eyebrow="Gratis para todos"
-        title="Aprende las técnicas básicas"
-        description="Estos videos son gratuitos y no requieren ningún kit: cómo agarrar el crochet, la cadeneta, el punto bajo y más."
+        title="¿Nunca has tejido crochet? No te preocupes"
+        description="Aquí vas a aprender desde cero y sin apuro: cómo agarrar la lana, hacer una cadeneta, el punto bajo y más. Mira cada video las veces que necesites, a tu ritmo."
       />
 
       <div className="mx-auto mt-10 max-w-2xl">
@@ -28,7 +28,7 @@ export default function TutorialesPage() {
         <SectionHeading
           eyebrow="Tutoriales por kit"
           title="Elige tu HOOKMI"
-          description="Cada pieza tiene sus tutoriales completos protegidos por el código incluido en su kit."
+          description="Cada pieza trae su propio tutorial completo, guardadito y protegido con el código que viene dentro de tu kit."
         />
 
         <div className="mt-12">

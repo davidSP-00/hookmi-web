@@ -3,10 +3,12 @@ import { basicTutorialVideoSources } from "@/content/basics.secure";
 
 type Context = { params: Promise<{ id: string }> };
 
-// Cabeceras que el navegador puede pedirle a nuestra Route Handler y que
-// simplemente reenviamos hacia CloudFront para que el <video> pueda buscar
-// (scrubbing) sin descargar el archivo completo cada vez.
-const FORWARDABLE_REQUEST_HEADERS = ["range", "if-range", "if-none-match"] as const;
+// Solo reenviamos "Range" hacia CloudFront para que el <video> pueda buscar
+// (scrubbing) sin descargar el archivo completo cada vez. Deliberadamente NO
+// reenviamos "If-None-Match"/"If-Range": como esta respuesta lleva su propio
+// Cache-Control, el navegador los agrega solo en revalidaciones automáticas,
+// y si el origin respondiera 304 no tendríamos body que retransmitir.
+const FORWARDABLE_REQUEST_HEADERS = ["range"] as const;
 
 // Cabeceras de la respuesta de CloudFront que sí es seguro reenviar al cliente.
 const FORWARDABLE_RESPONSE_HEADERS = [
@@ -51,7 +53,7 @@ export async function GET(request: NextRequest, { params }: Context) {
     return new Response("Video no disponible.", { status: 502 });
   }
 
-  if (!upstreamResponse.ok && upstreamResponse.status !== 206) {
+  if (!upstreamResponse.ok) {
     return new Response("Video no disponible.", { status: 502 });
   }
 

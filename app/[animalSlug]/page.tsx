@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-import { GraduationCap, Lock, Sparkles, Video } from "lucide-react";
+import { BookOpen, FileDown, Lock, Sparkles, Video } from "lucide-react";
 import { animals, getAnimalBySlug } from "@/content/animals";
 import { getAnimalSecureBySlug } from "@/content/animals.secure";
 import { basicTutorials } from "@/content/basics";
@@ -11,8 +11,9 @@ import { RESERVED_SLUGS, UNLOCK_COOKIE_PREFIX } from "@/lib/constants";
 import { DifficultyMeter } from "@/components/ui/DifficultyMeter";
 import { PasswordGateForm } from "@/components/animals/PasswordGateForm";
 import { VideoSectionAccordion } from "@/components/animals/VideoSectionAccordion";
-import { PdfDownloadButton } from "@/components/animals/PdfDownloadButton";
+import { GuidePdfButton, PdfDownloadButton } from "@/components/animals/PdfDownloadButton";
 import { UnlockedCelebration } from "@/components/animals/UnlockedCelebration";
+import { LearningStep } from "@/components/animals/LearningStep";
 
 type Props = { params: Promise<{ animalSlug: string }> };
 
@@ -85,39 +86,61 @@ export default async function AnimalPage({ params }: Props) {
 
       <section className="mt-12 rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-10">
         <h2 className="flex items-center gap-2 font-heading text-2xl font-bold text-hookmi-ink">
-          <Lock className="text-hookmi-coral" size={24} /> Tutoriales
+          <Lock className="text-hookmi-coral" size={24} /> Tu ruta de aprendizaje
         </h2>
 
         {unlocked && secure ? (
           <div className="mt-6 flex flex-col gap-10">
-            <div>
-              <h3 className="flex items-center gap-2 font-heading text-lg font-bold text-hookmi-ink">
-                <GraduationCap className="text-hookmi-coral" size={20} /> Antes de iniciar
-              </h3>
-              <p className="mt-1 text-sm text-hookmi-ink/70">
-                Cómo agarrar el crochet, la cadeneta, el punto bajo y más.
-              </p>
-              <div className="mt-4">
-                <VideoSectionAccordion sections={basicTutorials} />
-              </div>
-            </div>
+            <p className="text-hookmi-ink/70">
+              ¿Nunca has tejido crochet? No te preocupes: te dejamos todo listo en 3 pasos,
+              sin apuro y a tu ritmo.
+            </p>
 
-            <div>
-              <h3 className="flex items-center gap-2 font-heading text-lg font-bold text-hookmi-ink">
-                <Video className="text-hookmi-coral" size={20} /> Tutorial de {animal.name}
-              </h3>
-              <div className="mt-4 flex flex-col gap-6">
-                <VideoSectionAccordion sections={secure.sections} />
-                <PdfDownloadButton slug={animal.slug} />
-                <UnlockedCelebration animalName={animal.name} />
+            <LearningStep
+              number={1}
+              icon={BookOpen}
+              title="Cómo leer el crochet"
+              description="¿Primera vez con un patrón? Aquí te explicamos cómo interpretar abreviaturas y símbolos básicos antes de tocar la lana."
+            >
+              <GuidePdfButton slug={animal.slug} />
+            </LearningStep>
+
+            <LearningStep
+              number={2}
+              icon={FileDown}
+              title="Descarga el patrón completo"
+              description={`Aquí tienes el paso a paso completo de ${animal.name}, para que sigas cada punto sin perderte.`}
+            >
+              <PdfDownloadButton slug={animal.slug} />
+            </LearningStep>
+
+            <LearningStep
+              number={3}
+              icon={Video}
+              title="Videos tutoriales"
+              description={`Repasa las técnicas básicas si las necesitas, y luego sigue el tutorial completo de ${animal.name} a tu ritmo, video por video.`}
+            >
+              <div>
+                <p className="text-sm font-bold text-hookmi-ink">Técnicas básicas</p>
+                <div className="mt-2">
+                  <VideoSectionAccordion sections={basicTutorials} />
+                </div>
               </div>
-            </div>
+              <div>
+                <p className="text-sm font-bold text-hookmi-ink">Tutorial de {animal.name}</p>
+                <div className="mt-2">
+                  <VideoSectionAccordion sections={secure.sections} />
+                </div>
+              </div>
+              <UnlockedCelebration animalName={animal.name} />
+            </LearningStep>
           </div>
         ) : (
           <div className="mt-4">
             <p className="text-hookmi-ink/70">
-              Ingresa el código incluido en tu kit para desbloquear los videos de técnicas
-              básicas, el tutorial de {animal.name} y el PDF de instrucciones:
+              ¡Ya casi puedes empezar! Ingresa el código que viene dentro de tu kit y
+              desbloqueamos para ti la guía para leer el crochet, el patrón completo y los
+              videos de {animal.name}, paso a paso:
             </p>
             <ol className="mt-3 grid list-inside list-decimal grid-cols-1 gap-1 text-sm text-hookmi-ink/80 sm:grid-cols-2">
               {animal.sectionsMeta.map((section) => (
