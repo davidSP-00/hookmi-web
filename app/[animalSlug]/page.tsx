@@ -103,7 +103,7 @@ export default async function AnimalPage({ params }: Props) {
               title="Cómo leer el crochet"
               description="¿Primera vez con un patrón? Aquí te explicamos cómo interpretar abreviaturas y símbolos básicos antes de tocar la lana."
             >
-              <GuidePdfButton slug={animal.slug} />
+              <GuidePdfButton />
             </LearningStep>
 
             <LearningStep

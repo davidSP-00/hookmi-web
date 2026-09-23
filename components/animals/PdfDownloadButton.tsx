@@ -1,10 +1,10 @@
 import { BookOpen, FileDown } from "lucide-react";
 import { LinkButton } from "@/components/ui/Button";
 
-export function GuidePdfButton({ slug }: { slug: string }) {
+export function GuidePdfButton() {
   return (
     <LinkButton
-      href={`/api/guide-pdf/${slug}`}
+      href="/api/guide-pdf"
       target="_blank"
       rel="noopener noreferrer"
       variant="outline"

@@ -2,7 +2,7 @@ import "server-only";
 
 // Archivo SOLO servidor: nunca lo importes desde un componente de cliente
 // ni desde `content/animals.ts`. Solo lo deben leer las Route Handlers
-// en app/api/unlock, app/api/pdf/[slug], app/api/guide-pdf/[slug] y
+// en app/api/unlock, app/api/pdf/[slug] y
 // app/api/animal-video/[slug]/[sectionId].
 //
 // `videoUrl` es la URL real de CloudFront: nunca se pasa tal cual a un
