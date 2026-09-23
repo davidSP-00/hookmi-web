@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { BookOpen, FileDown, Lock, Sparkles, Video } from "lucide-react";
 import { animals, getAnimalBySlug } from "@/content/animals";
-import { getAnimalSecureBySlug } from "@/content/animals.secure";
+import { getAnimalClientSections, getAnimalSecureBySlug } from "@/content/animals.secure";
 import { basicTutorials } from "@/content/basics";
 import { verifyUnlockToken } from "@/lib/unlockToken";
 import { RESERVED_SLUGS, UNLOCK_COOKIE_PREFIX } from "@/lib/constants";
@@ -49,6 +49,7 @@ export default async function AnimalPage({ params }: Props) {
   const token = cookieStore.get(`${UNLOCK_COOKIE_PREFIX}${animal.slug}`)?.value;
   const unlocked = token ? await verifyUnlockToken(token, animal.slug) : false;
   const secure = unlocked ? getAnimalSecureBySlug(animal.slug) : undefined;
+  const secureVideoSections = secure ? getAnimalClientSections(animal.slug) : [];
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-16">
@@ -129,7 +130,7 @@ export default async function AnimalPage({ params }: Props) {
               <div>
                 <p className="text-sm font-bold text-hookmi-ink">Tutorial de {animal.name}</p>
                 <div className="mt-2">
-                  <VideoSectionAccordion sections={secure.sections} />
+                  <VideoSectionAccordion sections={secureVideoSections} />
                 </div>
               </div>
               <UnlockedCelebration animalName={animal.name} />

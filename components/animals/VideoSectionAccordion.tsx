@@ -29,7 +29,7 @@ export function VideoSectionAccordion({ sections }: { sections: Section[] }) {
             {/* El video/iframe solo se monta cuando la sección está abierta, para no cargar todos a la vez */}
             {isOpen && (
               <div className="aspect-video bg-black">
-                {section.videoUrl.startsWith("/api/tutorial-video/") ? (
+                {section.videoUrl.startsWith("/api/") ? (
                   <video
                     key={section.videoUrl}
                     src={section.videoUrl}

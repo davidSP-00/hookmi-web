@@ -16,7 +16,7 @@ export const basicTutorials: BasicTutorial[] = [
   { id: "agarre", title: "Cómo agarrar la lana y el crochet", videoUrl: "/api/tutorial-video/agarre" },
   { id: "cadeneta", title: "Cómo hacer una cadeneta", videoUrl: "/api/tutorial-video/cadeneta" },
   { id: "anillo-magico", title: "Cómo hacer un anillo mágico", videoUrl: "/api/tutorial-video/anillo-magico" },
-  { id: "punto-bajo", title: "Cómo hacer un punto bajo", videoUrl: "/api/tutorial-video/punto-bajo" },
   { id: "aumento", title: "Cómo hacer un aumento", videoUrl: "/api/tutorial-video/aumento" },
+  { id: "practicando-aumentos", title: "Practicando aumentos", videoUrl: "/api/tutorial-video/practicando-aumentos" },
   { id: "disminucion", title: "Cómo hacer una disminución", videoUrl: "/api/tutorial-video/disminucion" },
 ];

@@ -12,7 +12,7 @@ export const basicTutorialVideoSources: Record<string, string> = {
   agarre: "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/COMO%20AGARRAR%20LA%20LANA.mp4",
   cadeneta: "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/CADENETA.mp4",
   "anillo-magico": "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/ANILLO%20MAGICO.mp4",
-  "punto-bajo": "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/PUNTO%20BAJO.mp4",
   aumento: "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/AUMENTO.mp4",
+  "practicando-aumentos": "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/PRACTICA_AUMENTO.mp4",
   disminucion: "https://d38qkanw9z3wft.cloudfront.net/TUTORIAL-BASICO/DISMINUCION.mp4",
 };

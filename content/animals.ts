@@ -30,10 +30,10 @@ export const animals: Animal[] = [
     sectionsMeta: [
       { title: "Cuerpo" },
       { title: "Orejas" },
+      { title: "Nariz" },
       { title: "Patas delanteras" },
       { title: "Patas traseras" },
       { title: "Barriga" },
-      { title: "Nariz" },
       { title: "Cola" },
       { title: "Cosiendo las partes" },
       { title: "Llavero (opcional)" },
