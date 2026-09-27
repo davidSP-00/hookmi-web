@@ -13,8 +13,6 @@ import {
   RotateCw,
   Scan,
   SlidersHorizontal,
-  StepBack,
-  StepForward,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -55,6 +53,38 @@ function formatSpeed(speed: number) {
   return `${speed}×`;
 }
 
+// ---------- Posición guardada (solo en este navegador) ----------
+
+const POSITION_KEY_PREFIX = "hookmi:video-position:";
+// No vale la pena reanudar si apenas se había empezado o si ya estaba en el final.
+const MIN_RESUME_SECONDS = 3;
+const END_MARGIN_SECONDS = 5;
+const SAVE_EVERY_SECONDS = 2;
+
+// localStorage puede no existir o lanzar error (modo privado, almacenamiento bloqueado...):
+// en ese caso simplemente no se guarda nada y el video empieza desde el inicio.
+function readSavedPosition(src: string): number | null {
+  try {
+    const raw = window.localStorage.getItem(POSITION_KEY_PREFIX + src);
+    if (!raw) return null;
+    const value = Number(JSON.parse(raw)?.t);
+    return Number.isFinite(value) && value > 0 ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function savePosition(src: string, time: number, duration: number) {
+  try {
+    const key = POSITION_KEY_PREFIX + src;
+    const nearEnd = Number.isFinite(duration) && duration > 0 && time >= duration - END_MARGIN_SECONDS;
+    if (time < MIN_RESUME_SECONDS || nearEnd) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, JSON.stringify({ t: Math.floor(time * 10) / 10, at: Date.now() }));
+  } catch {
+    // Sin almacenamiento disponible: no pasa nada.
+  }
+}
+
 function getFullscreenElement() {
   const doc = document as FullscreenDocument;
   return document.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
@@ -80,6 +110,81 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
 
   const isFullscreen = isNativeFullscreen || isPseudoFullscreen;
   const isZoomed = transform.s > 1.001;
+
+  // ---------- Recordar dónde se quedó ----------
+
+  const lastSavedRef = useRef(0);
+  const [resumedFrom, setResumedFrom] = useState<number | null>(null);
+
+  // Hasta no haber intentado reanudar no se guarda nada: si no, un "0:00" guardado
+  // al salir de la página borraría la posición que todavía no se había aplicado.
+  const restoreAttemptedRef = useRef(false);
+
+  const handleMetadata = useCallback(
+    (video: HTMLVideoElement) => {
+      setDuration(video.duration || 0);
+      if (restoreAttemptedRef.current) return;
+      restoreAttemptedRef.current = true;
+
+      const saved = readSavedPosition(src);
+      const canResume =
+        saved !== null &&
+        saved >= MIN_RESUME_SECONDS &&
+        (!Number.isFinite(video.duration) || saved < video.duration - END_MARGIN_SECONDS);
+      if (canResume && video.currentTime < 1) {
+        video.currentTime = saved;
+        lastSavedRef.current = saved;
+        setCurrentTime(saved);
+        setResumedFrom(saved);
+      }
+    },
+    [src],
+  );
+
+  // El video que ya viene abierto al cargar la página (el primero del acordeón) se
+  // renderiza en el servidor: el navegador puede leer sus metadatos antes de que React
+  // conecte onLoadedMetadata, y ese evento se pierde. Por eso lo revisamos al montar.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && video.readyState >= 1) handleMetadata(video);
+  }, [handleMetadata]);
+
+  const persistPosition = useCallback((video: HTMLVideoElement | null = videoRef.current) => {
+    if (!video || video.readyState === 0 || !restoreAttemptedRef.current) return;
+    lastSavedRef.current = video.currentTime;
+    savePosition(src, video.currentTime, video.duration);
+  }, [src]);
+
+  // Guarda también al cerrar/cambiar de pestaña, al bloquear el móvil y al cerrar la sección.
+  useEffect(() => {
+    // Al desmontar, React ya soltó videoRef; por eso guardamos el elemento aquí.
+    const video = videoRef.current;
+    const save = () => persistPosition(video);
+    const onHide = () => {
+      if (document.visibilityState === "hidden") save();
+    };
+    window.addEventListener("pagehide", save);
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      window.removeEventListener("pagehide", save);
+      document.removeEventListener("visibilitychange", onHide);
+      save();
+    };
+  }, [persistPosition]);
+
+  // El aviso "Continuando desde..." se oculta solo después de unos segundos.
+  useEffect(() => {
+    if (resumedFrom === null) return;
+    const timer = window.setTimeout(() => setResumedFrom(null), 6000);
+    return () => window.clearTimeout(timer);
+  }, [resumedFrom]);
+
+  const restartFromBeginning = () => {
+    const video = videoRef.current;
+    if (video) video.currentTime = 0;
+    savePosition(src, 0, 0);
+    setResumedFrom(null);
+  };
 
   // ---------- Zoom ----------
 
@@ -561,19 +666,29 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
           disableRemotePlayback
           draggable={false}
           onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
+          onPause={() => {
+            setIsPlaying(false);
+            persistPosition();
+          }}
+          onEnded={() => {
+            setIsPlaying(false);
+            savePosition(src, 0, 0); // terminado: la próxima vez empieza desde el inicio
+          }}
           onWaiting={() => setIsBuffering(true)}
           onPlaying={() => setIsBuffering(false)}
           onCanPlay={() => setIsBuffering(false)}
-          onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
+          onTimeUpdate={(event) => {
+            const time = event.currentTarget.currentTime;
+            setCurrentTime(time);
+            if (Math.abs(time - lastSavedRef.current) >= SAVE_EVERY_SECONDS) persistPosition();
+          }}
           onSeeked={(event) => setCurrentTime(event.currentTarget.currentTime)}
           onDurationChange={(event) => setDuration(event.currentTarget.duration || 0)}
           onLoadedMetadata={(event) => {
             const video = event.currentTarget;
-            setDuration(video.duration || 0);
             video.defaultPlaybackRate = speed;
             video.playbackRate = speed;
+            handleMetadata(video);
           }}
           onRateChange={(event) => setSpeed(event.currentTarget.playbackRate)}
           onVolumeChange={(event) => setIsMuted(event.currentTarget.muted)}
@@ -605,6 +720,21 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
           >
             <Scan size={14} /> Quitar zoom
           </button>
+        )}
+        {resumedFrom !== null && (
+          <div className="absolute inset-x-2 bottom-2 flex justify-center">
+            <div className="flex max-w-full items-center gap-2 rounded-full bg-black/80 py-1 pl-3 pr-1 text-[11px] font-bold sm:text-xs">
+              <span className="truncate">Continuando desde {formatTime(resumedFrom)}</span>
+              <button
+                type="button"
+                onClick={restartFromBeginning}
+                onPointerDown={(event) => event.stopPropagation()}
+                className="flex-shrink-0 rounded-full bg-hookmi-yellow px-2.5 py-1 text-hookmi-ink hover:bg-hookmi-yellow-dark"
+              >
+                Ver desde el inicio
+              </button>
+            </div>
+          </div>
         )}
       </div>
 
@@ -641,13 +771,10 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
 
         {/* Reproducción: en móvil ocupa todo el ancho, centrada */}
         <div className="flex items-center justify-between gap-1 sm:gap-2">
-          <div className="flex flex-1 items-center justify-between gap-1 sm:flex-none sm:justify-start sm:gap-2">
+          <div className="flex flex-1 items-center justify-center gap-6 sm:flex-none sm:justify-start sm:gap-2">
             <ControlButton label={`Retroceder ${SKIP_SECONDS} segundos`} onClick={() => seekBy(-SKIP_SECONDS)}>
               <RotateCcw size={18} />
               <span className="text-[10px] font-bold">{SKIP_SECONDS}</span>
-            </ControlButton>
-            <ControlButton label="Cuadro anterior (,)" onClick={() => stepFrame(-1)}>
-              <StepBack size={18} />
             </ControlButton>
             <button
               type="button"
@@ -658,9 +785,6 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
             >
               {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} className="ml-0.5" fill="currentColor" />}
             </button>
-            <ControlButton label="Cuadro siguiente (.)" onClick={() => stepFrame(1)}>
-              <StepForward size={18} />
-            </ControlButton>
             <ControlButton label={`Adelantar ${SKIP_SECONDS} segundos`} onClick={() => seekBy(SKIP_SECONDS)}>
               <span className="text-[10px] font-bold">{SKIP_SECONDS}</span>
               <RotateCw size={18} />
