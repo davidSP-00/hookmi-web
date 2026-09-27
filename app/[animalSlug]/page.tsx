@@ -85,7 +85,7 @@ export default async function AnimalPage({ params }: Props) {
         </div>
       </div>
 
-      <section className="mt-12 rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-10">
+      <section className="mt-12 rounded-[2rem] border border-black/5 bg-white p-4 shadow-sm sm:p-10">
         <h2 className="flex items-center gap-2 font-heading text-2xl font-bold text-hookmi-ink">
           <Lock className="text-hookmi-coral" size={24} /> Tu ruta de aprendizaje
         </h2>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { VideoPlayer } from "./VideoPlayer";
 
 type Section = { title: string; videoUrl: string };
 
@@ -17,31 +18,21 @@ export function VideoSectionAccordion({ sections }: { sections: Section[] }) {
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : index)}
-              className="flex w-full items-center justify-between bg-white px-5 py-4 text-left font-bold text-hookmi-ink"
+              className="flex w-full items-center justify-between gap-3 bg-white px-4 py-3.5 text-left text-sm font-bold text-hookmi-ink sm:px-5 sm:py-4 sm:text-base"
               aria-expanded={isOpen}
             >
-              <span>
+              <span className="min-w-0">
                 {index + 1}. {section.title}
               </span>
-              <ChevronDown className={`transition ${isOpen ? "rotate-180" : ""}`} size={20} />
+              <ChevronDown className={`flex-shrink-0 transition ${isOpen ? "rotate-180" : ""}`} size={20} />
             </button>
 
             {/* El video/iframe solo se monta cuando la sección está abierta, para no cargar todos a la vez */}
-            {isOpen && (
-              <div className="aspect-video bg-black">
-                {section.videoUrl.startsWith("/api/") ? (
-                  <video
-                    key={section.videoUrl}
-                    src={section.videoUrl}
-                    title={section.title}
-                    className="h-full w-full"
-                    controls
-                    controlsList="nodownload noremoteplayback"
-                    disablePictureInPicture
-                    disableRemotePlayback
-                    onContextMenu={(event) => event.preventDefault()}
-                  />
-                ) : (
+            {isOpen &&
+              (section.videoUrl.startsWith("/api/") ? (
+                <VideoPlayer key={section.videoUrl} src={section.videoUrl} title={section.title} />
+              ) : (
+                <div className="aspect-video bg-black">
                   <iframe
                     src={section.videoUrl}
                     title={section.title}
@@ -49,9 +40,8 @@ export function VideoSectionAccordion({ sections }: { sections: Section[] }) {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
-                )}
-              </div>
-            )}
+                </div>
+              ))}
           </div>
         );
       })}
