@@ -9,7 +9,6 @@ import {
   Minimize,
   Pause,
   Play,
-  Repeat,
   RotateCcw,
   RotateCw,
   Scan,
@@ -101,7 +100,6 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
   const [duration, setDuration] = useState(0);
   const [speed, setSpeed] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [isLooping, setIsLooping] = useState(false);
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const [isPseudoFullscreen, setIsPseudoFullscreen] = useState(false);
   const [speedMenuOpen, setSpeedMenuOpen] = useState(false);
@@ -349,6 +347,15 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
       const doc = document as FullscreenDocument;
       if (document.exitFullscreen) void document.exitFullscreen().catch(() => {});
       else doc.webkitExitFullscreen?.();
+      return;
+    }
+
+    // En celulares y tablets la pantalla completa "real" del navegador muestra un aviso
+    // del sistema ("para salir, arrastra desde arriba…") que tapa los controles unos
+    // segundos y no se puede quitar. Ahí usamos la pantalla completa propia (por CSS).
+    const isTouchDevice = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+    if (isTouchDevice) {
+      setIsPseudoFullscreen(true);
       return;
     }
 
@@ -644,8 +651,6 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
       F: toggleFullscreen,
       m: toggleMute,
       M: toggleMute,
-      l: () => setIsLooping((value) => !value),
-      L: () => setIsLooping((value) => !value),
     };
     const action = actions[event.key];
     if (action) {
@@ -660,9 +665,6 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
 
   const extraButtons = (
     <>
-      <ControlButton label="Repetir video (L)" onClick={() => setIsLooping((value) => !value)} active={isLooping}>
-        <Repeat size={18} />
-      </ControlButton>
       <ControlButton label={isMuted ? "Activar sonido (M)" : "Silenciar (M)"} onClick={toggleMute}>
         {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
       </ControlButton>
@@ -786,7 +788,6 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
           }}
           playsInline
           preload="metadata"
-          loop={isLooping}
           controlsList="nodownload noremoteplayback"
           disablePictureInPicture
           disableRemotePlayback
@@ -959,13 +960,11 @@ function ControlButton({
   label,
   onClick,
   children,
-  active = false,
   disabled = false,
 }: {
   label: string;
   onClick: () => void;
   children: ReactNode;
-  active?: boolean;
   disabled?: boolean;
 }) {
   return (
@@ -974,11 +973,8 @@ function ControlButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      aria-pressed={active || undefined}
       title={label}
-      className={`flex h-9 min-w-9 flex-shrink-0 items-center justify-center gap-0.5 rounded-full px-1.5 transition disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:min-w-10 sm:px-2 ${
-        active ? "bg-hookmi-yellow text-hookmi-ink" : "bg-white/10 text-white hover:bg-white/20"
-      }`}
+      className={`flex h-9 min-w-9 flex-shrink-0 items-center justify-center gap-0.5 rounded-full px-1.5 transition disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:min-w-10 sm:px-2 bg-white/10 text-white hover:bg-white/20`}
     >
       {children}
     </button>
