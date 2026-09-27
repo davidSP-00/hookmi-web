@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import {
+  Gauge,
   LoaderCircle,
   Maximize,
   Minimize,
@@ -12,7 +13,6 @@ import {
   RotateCcw,
   RotateCw,
   Scan,
-  SlidersHorizontal,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -104,12 +104,51 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
   const [isLooping, setIsLooping] = useState(false);
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const [isPseudoFullscreen, setIsPseudoFullscreen] = useState(false);
-  const [showSpeeds, setShowSpeeds] = useState(true);
+  const [speedMenuOpen, setSpeedMenuOpen] = useState(false);
   const [transform, setTransform] = useState<Transform>({ s: 1, x: 0, y: 0 });
   const transformRef = useRef<Transform>(transform);
 
   const isFullscreen = isNativeFullscreen || isPseudoFullscreen;
   const isZoomed = transform.s > 1.001;
+
+  // ---------- Controles flotantes en pantalla completa ----------
+  // En pantalla completa los controles van encima del video y se esconden solos
+  // mientras se reproduce, para que el tejido ocupe toda la pantalla.
+
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const controlsVisibleRef = useRef(true);
+  const hideTimerRef = useRef<number | null>(null);
+  const fullscreenRef = useRef(false);
+  const speedMenuOpenRef = useRef(false);
+  // El toque que hace aparecer los controles no debe además pausar el video.
+  const tapRevealedRef = useRef(false);
+
+  useEffect(() => {
+    fullscreenRef.current = isFullscreen;
+    speedMenuOpenRef.current = speedMenuOpen;
+  }, [isFullscreen, speedMenuOpen]);
+
+  const revealControls = useCallback(() => {
+    controlsVisibleRef.current = true;
+    setControlsVisible(true);
+    if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = window.setTimeout(() => {
+      hideTimerRef.current = null;
+      const video = videoRef.current;
+      if (!fullscreenRef.current || !video || video.paused || speedMenuOpenRef.current) return;
+      controlsVisibleRef.current = false;
+      setControlsVisible(false);
+    }, 3000);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
+    },
+    [],
+  );
+
+  const showOverlay = controlsVisible || !isPlaying || speedMenuOpen;
 
   // ---------- Recordar dónde se quedó ----------
 
@@ -299,6 +338,8 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
   const toggleFullscreen = useCallback(() => {
     const container = containerRef.current as FullscreenElement | null;
     if (!container) return;
+    setSpeedMenuOpen(false);
+    revealControls();
 
     if (isPseudoFullscreen) {
       setIsPseudoFullscreen(false);
@@ -329,7 +370,7 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
     } catch {
       setIsPseudoFullscreen(true);
     }
-  }, [isPseudoFullscreen]);
+  }, [isPseudoFullscreen, revealControls]);
 
   useEffect(() => {
     const onChange = () => setIsNativeFullscreen(getFullscreenElement() === containerRef.current);
@@ -383,10 +424,12 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
         return;
       }
       lastTapRef.current = { time: now, point };
+      // En pantalla completa con los controles escondidos, el toque solo los muestra.
+      const revealOnly = tapRevealedRef.current;
       if (tapTimerRef.current !== null) window.clearTimeout(tapTimerRef.current);
       tapTimerRef.current = window.setTimeout(() => {
         tapTimerRef.current = null;
-        togglePlay();
+        if (!revealOnly) togglePlay();
       }, DOUBLE_TAP_MS);
     },
     [toggleZoomAt, togglePlay],
@@ -568,7 +611,16 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
 
   // ---------- Teclado ----------
 
+  // Cualquier toque, clic o movimiento del ratón vuelve a mostrar los controles.
+  const onAnyPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.type === "pointerdown") {
+      tapRevealedRef.current = fullscreenRef.current && !controlsVisibleRef.current && !videoRef.current?.paused;
+    }
+    if (event.type === "pointerdown" || event.pointerType === "mouse") revealControls();
+  };
+
   const onKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    revealControls();
     if (event.altKey || event.ctrlKey || event.metaKey) return;
     const target = event.target as HTMLElement;
     const onControl = !!target.closest("button, input");
@@ -623,22 +675,96 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
     </>
   );
 
+  const transportButtons = (
+    <>
+      <ControlButton label={`Retroceder ${SKIP_SECONDS} segundos`} onClick={() => seekBy(-SKIP_SECONDS)}>
+        <RotateCcw size={18} />
+        <span className="text-[10px] font-bold">{SKIP_SECONDS}</span>
+      </ControlButton>
+      <button
+        type="button"
+        onClick={togglePlay}
+        aria-label={isPlaying ? "Pausar" : "Reproducir"}
+        title={isPlaying ? "Pausar (espacio)" : "Reproducir (espacio)"}
+        className={`flex flex-shrink-0 items-center justify-center rounded-full bg-hookmi-yellow text-hookmi-ink transition hover:bg-hookmi-yellow-dark ${
+          isFullscreen ? "h-10 w-10" : "h-12 w-12"
+        }`}
+      >
+        {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} className="ml-0.5" fill="currentColor" />}
+      </button>
+      <ControlButton label={`Adelantar ${SKIP_SECONDS} segundos`} onClick={() => seekBy(SKIP_SECONDS)}>
+        <span className="text-[10px] font-bold">{SKIP_SECONDS}</span>
+        <RotateCw size={18} />
+      </ControlButton>
+    </>
+  );
+
+  const speedButtons = SPEEDS.map((value) => (
+    <button
+      key={value}
+      type="button"
+      onClick={() => {
+        changeSpeed(value);
+        setSpeedMenuOpen(false);
+      }}
+      aria-pressed={speed === value}
+      aria-label={`Velocidad ${formatSpeed(value)}`}
+      className={`h-9 min-w-0 rounded-lg px-0 text-[11px] font-bold tabular-nums transition sm:text-sm ${
+        isFullscreen ? "w-10 sm:w-12" : ""
+      } ${speed === value ? "bg-hookmi-yellow text-hookmi-ink" : "bg-white/10 text-white hover:bg-white/20"}`}
+    >
+      {formatSpeed(value)}
+    </button>
+  ));
+
+  const seekBar = (
+    <div className="flex items-center gap-2 text-[11px] font-semibold tabular-nums sm:gap-3 sm:text-xs">
+      <span className="w-9 text-right sm:w-10">{formatTime(currentTime)}</span>
+      <input
+        type="range"
+        min={0}
+        max={duration || 0}
+        step={0.01}
+        value={Math.min(currentTime, duration || 0)}
+        onChange={(event) => {
+          const video = videoRef.current;
+          if (!video) return;
+          video.currentTime = Number(event.target.value);
+          setCurrentTime(video.currentTime);
+        }}
+        aria-label="Posición del video"
+        className="h-2 min-w-0 flex-1 cursor-pointer accent-hookmi-yellow"
+        style={{
+          background: `linear-gradient(to right, var(--color-hookmi-yellow) ${progress}%, rgba(255,255,255,0.25) ${progress}%)`,
+          borderRadius: 9999,
+        }}
+      />
+      <span className="w-9 sm:w-10">{formatTime(duration)}</span>
+    </div>
+  );
+
   return (
     <div
       ref={containerRef}
       tabIndex={0}
       onKeyDown={onKeyDown}
+      onPointerDownCapture={onAnyPointer}
+      onPointerMoveCapture={onAnyPointer}
       onContextMenu={(event) => event.preventDefault()}
       className={`flex select-none flex-col bg-black text-white outline-none focus-visible:ring-2 focus-visible:ring-hookmi-yellow ${
-        isPseudoFullscreen ? "fixed inset-0 z-[100] h-[100dvh] w-screen" : ""
-      } ${isNativeFullscreen ? "h-full w-full" : ""}`}
+        isPseudoFullscreen ? "fixed inset-0 z-[100] h-[100dvh] w-screen" : "relative"
+      } ${isNativeFullscreen ? "h-full w-full" : ""} ${isFullscreen && !showOverlay ? "cursor-none" : ""}`}
       aria-label={`Reproductor: ${title}`}
     >
       {/* Superficie del video (zoom y arrastre) */}
       <div
         ref={surfaceRef}
         className={`relative overflow-hidden bg-black ${isFullscreen ? "min-h-0 flex-1" : "aspect-video"} ${
-          isZoomed ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
+          isFullscreen && !showOverlay
+            ? "cursor-none"
+            : isZoomed
+              ? "cursor-grab active:cursor-grabbing"
+              : "cursor-pointer"
         }`}
         style={{ touchAction: isZoomed ? "none" : "pan-y" }}
         onPointerDown={onPointerDown}
@@ -665,7 +791,10 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
           disablePictureInPicture
           disableRemotePlayback
           draggable={false}
-          onPlay={() => setIsPlaying(true)}
+          onPlay={() => {
+            setIsPlaying(true);
+            revealControls();
+          }}
           onPause={() => {
             setIsPlaying(false);
             persistPosition();
@@ -708,7 +837,11 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
           </div>
         )}
         <div className="pointer-events-none absolute left-2 top-2 flex gap-2 text-xs font-bold">
-          {speed !== 1 && <span className="rounded-full bg-black/70 px-2 py-1">{formatSpeed(speed)}</span>}
+          {speed !== 1 && (
+            <span className="flex items-center gap-1 rounded-full bg-black/70 px-2 py-1">
+              <Gauge size={14} /> {formatSpeed(speed)}
+            </span>
+          )}
           {isZoomed && <span className="rounded-full bg-black/70 px-2 py-1">Zoom {transform.s.toFixed(1)}×</span>}
         </div>
         {isZoomed && (
@@ -722,7 +855,7 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
           </button>
         )}
         {resumedFrom !== null && (
-          <div className="absolute inset-x-2 bottom-2 flex justify-center">
+          <div className={`absolute inset-x-2 flex justify-center ${isFullscreen ? "top-12" : "bottom-2"}`}>
             <div className="flex max-w-full items-center gap-2 rounded-full bg-black/80 py-1 pl-3 pr-1 text-[11px] font-bold sm:text-xs">
               <span className="truncate">Continuando desde {formatTime(resumedFrom)}</span>
               <button
@@ -738,111 +871,86 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
         )}
       </div>
 
-      {/* Controles */}
-      <div
-        className={`flex flex-col bg-hookmi-ink px-2.5 sm:px-4 ${
-          isFullscreen ? "gap-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]" : "gap-3 py-3"
-        }`}
-      >
-        {/* Barra de tiempo */}
-        <div className="flex items-center gap-2 text-[11px] font-semibold tabular-nums sm:gap-3 sm:text-xs">
-          <span className="w-9 text-right sm:w-10">{formatTime(currentTime)}</span>
-          <input
-            type="range"
-            min={0}
-            max={duration || 0}
-            step={0.01}
-            value={Math.min(currentTime, duration || 0)}
-            onChange={(event) => {
-              const video = videoRef.current;
-              if (!video) return;
-              video.currentTime = Number(event.target.value);
-              setCurrentTime(video.currentTime);
-            }}
-            aria-label="Posición del video"
-            className="h-2 min-w-0 flex-1 cursor-pointer accent-hookmi-yellow"
-            style={{
-              background: `linear-gradient(to right, var(--color-hookmi-yellow) ${progress}%, rgba(255,255,255,0.25) ${progress}%)`,
-              borderRadius: 9999,
-            }}
-          />
-          <span className="w-9 sm:w-10">{formatTime(duration)}</span>
-        </div>
+      {/* Controles normales, debajo del video */}
+      {!isFullscreen && (
+        <div className="flex flex-col gap-3 bg-hookmi-ink px-2.5 py-3 sm:px-4">
+          {seekBar}
 
-        {/* Reproducción: en móvil ocupa todo el ancho, centrada */}
-        <div className="flex items-center justify-between gap-1 sm:gap-2">
-          <div className="flex flex-1 items-center justify-center gap-6 sm:flex-none sm:justify-start sm:gap-2">
-            <ControlButton label={`Retroceder ${SKIP_SECONDS} segundos`} onClick={() => seekBy(-SKIP_SECONDS)}>
-              <RotateCcw size={18} />
-              <span className="text-[10px] font-bold">{SKIP_SECONDS}</span>
-            </ControlButton>
-            <button
-              type="button"
-              onClick={togglePlay}
-              aria-label={isPlaying ? "Pausar" : "Reproducir"}
-              title={isPlaying ? "Pausar (espacio)" : "Reproducir (espacio)"}
-              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-hookmi-yellow text-hookmi-ink transition hover:bg-hookmi-yellow-dark"
-            >
-              {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} className="ml-0.5" fill="currentColor" />}
-            </button>
-            <ControlButton label={`Adelantar ${SKIP_SECONDS} segundos`} onClick={() => seekBy(SKIP_SECONDS)}>
-              <span className="text-[10px] font-bold">{SKIP_SECONDS}</span>
-              <RotateCw size={18} />
-            </ControlButton>
-          </div>
-
-          {/* En pantallas grandes estos van en la misma fila; en móvil suben a la fila de "Velocidad" */}
-          <div className="hidden items-center gap-2 sm:flex">
-            {extraButtons}
-          </div>
-        </div>
-
-        {/* Velocidad (+ repetir / sonido / pantalla completa en móvil) */}
-        <div className={`flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 ${showSpeeds ? "" : "sm:hidden"}`}>
-          <div className="flex items-center justify-between gap-2 sm:w-20 sm:flex-shrink-0">
-            <span className="text-[11px] font-bold uppercase tracking-wide text-white/70">Velocidad</span>
-            <div className="flex items-center gap-1 sm:hidden">{extraButtons}</div>
-          </div>
-          {showSpeeds && (
-            <div className="grid flex-1 grid-cols-7 gap-1 sm:gap-1.5" role="group" aria-label="Velocidad de reproducción">
-              {SPEEDS.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => changeSpeed(value)}
-                  aria-pressed={speed === value}
-                  aria-label={`Velocidad ${formatSpeed(value)}`}
-                  className={`h-9 min-w-0 rounded-lg px-0 text-[11px] font-bold tabular-nums transition sm:text-sm ${
-                    speed === value ? "bg-hookmi-yellow text-hookmi-ink" : "bg-white/10 text-white hover:bg-white/20"
-                  }`}
-                >
-                  {formatSpeed(value)}
-                </button>
-              ))}
+          {/* Reproducción: en móvil centrada */}
+          <div className="flex items-center justify-between gap-1 sm:gap-2">
+            <div className="flex flex-1 items-center justify-center gap-6 sm:flex-none sm:justify-start sm:gap-2">
+              {transportButtons}
             </div>
-          )}
-        </div>
 
-        {!isFullscreen && (
+            {/* En pantallas grandes estos van en la misma fila; en móvil suben a la fila de "Velocidad" */}
+            <div className="hidden items-center gap-2 sm:flex">{extraButtons}</div>
+          </div>
+
+          {/* Velocidad (+ repetir / sonido / pantalla completa en móvil) */}
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2">
+            <div className="flex items-center justify-between gap-2 sm:w-20 sm:flex-shrink-0">
+              <span className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-white/70">
+                <Gauge size={14} /> Velocidad
+              </span>
+              <div className="flex items-center gap-1 sm:hidden">{extraButtons}</div>
+            </div>
+            <div className="grid flex-1 grid-cols-7 gap-1 sm:gap-1.5">{speedButtons}</div>
+          </div>
+
           <p className="text-center text-[11px] leading-snug text-white/60 sm:text-left">
             Toca dos veces o pellizca el video para hacer zoom
             <span className="hidden sm:inline"> (en computadora, doble clic)</span>. Con zoom, arrastra para moverte.
           </p>
-        )}
+        </div>
+      )}
 
-        {/* En pantalla completa (sobre todo con el móvil horizontal) se pueden ocultar
-            las velocidades para dejarle más espacio al video. */}
-        {isFullscreen && (
-          <button
-            type="button"
-            onClick={() => setShowSpeeds((value) => !value)}
-            aria-expanded={showSpeeds}
-            className="flex items-center justify-center gap-1 text-[11px] font-bold text-white/70 hover:text-white"
-          >
-            <SlidersHorizontal size={14} /> {showSpeeds ? "Ocultar velocidades" : "Mostrar velocidades"}
-          </button>
-        )}
-      </div>
+      {/* Pantalla completa: barra compacta flotando sobre el video, se esconde sola */}
+      {isFullscreen && (
+        <div
+          className={`absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/55 to-transparent pt-10 transition-opacity duration-300 ${
+            showOverlay ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+          style={{
+            paddingLeft: "max(0.75rem, env(safe-area-inset-left))",
+            paddingRight: "max(0.75rem, env(safe-area-inset-right))",
+            paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
+          }}
+        >
+          {speedMenuOpen && (
+            <div className="mb-2 flex justify-end">
+              <div className="grid grid-cols-7 gap-1 rounded-xl bg-black/85 p-1">{speedButtons}</div>
+            </div>
+          )}
+
+          {seekBar}
+
+          <div className="mt-1.5 flex items-center justify-between gap-1">
+            <div className="flex items-center gap-1">{transportButtons}</div>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setSpeedMenuOpen((value) => !value);
+                  revealControls();
+                }}
+                aria-expanded={speedMenuOpen}
+                aria-label={`Cambiar velocidad (ahora ${formatSpeed(speed)})`}
+                title="Cambiar velocidad"
+                className={`flex h-9 items-center gap-1 rounded-full pl-2 pr-2.5 text-xs font-bold tabular-nums transition ${
+                  speedMenuOpen || speed !== 1
+                    ? "bg-hookmi-yellow text-hookmi-ink"
+                    : "bg-white/15 text-white hover:bg-white/25"
+                }`}
+              >
+                <Gauge size={16} />
+                <span className="hidden sm:inline">Velocidad</span>
+                {formatSpeed(speed)}
+              </button>
+              {extraButtons}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
