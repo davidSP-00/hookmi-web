@@ -11,6 +11,7 @@ import {
   Play,
   RotateCcw,
   RotateCw,
+  RotateCwSquare,
   Scan,
   Volume2,
   VolumeX,
@@ -36,6 +37,11 @@ type FullscreenDocument = Document & {
 };
 type FullscreenElement = HTMLElement & {
   webkitRequestFullscreen?: () => Promise<void> | void;
+};
+// lock()/unlock() no están en todos los tipos de TypeScript ni en todos los navegadores.
+type LockableOrientation = ScreenOrientation & {
+  lock?: (orientation: "portrait" | "landscape") => Promise<void>;
+  unlock?: () => void;
 };
 // Evento de pellizco del trackpad en Safari de escritorio.
 type SafariGestureEvent = Event & { scale: number; clientX: number; clientY: number };
@@ -103,6 +109,8 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const [isPseudoFullscreen, setIsPseudoFullscreen] = useState(false);
   const [speedMenuOpen, setSpeedMenuOpen] = useState(false);
+  const [isRotated, setIsRotated] = useState(false);
+  const rotatedRef = useRef(false);
   const [transform, setTransform] = useState<Transform>({ s: 1, x: 0, y: 0 });
   const transformRef = useRef<Transform>(transform);
 
@@ -279,7 +287,10 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
 
   const toLocalPoint = useCallback((clientX: number, clientY: number): Point => {
     const rect = surfaceRef.current?.getBoundingClientRect();
-    return rect ? { x: clientX - rect.left, y: clientY - rect.top } : { x: 0, y: 0 };
+    if (!rect) return { x: 0, y: 0 };
+    // Con el giro por CSS (90° a la derecha) los ejes de la pantalla y del video no coinciden.
+    if (rotatedRef.current) return { x: clientY - rect.top, y: rect.right - clientX };
+    return { x: clientX - rect.left, y: clientY - rect.top };
   }, []);
 
   // ---------- Reproducción ----------
@@ -337,6 +348,7 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
     const container = containerRef.current as FullscreenElement | null;
     if (!container) return;
     setSpeedMenuOpen(false);
+    setIsRotated(false);
     revealControls();
 
     if (isPseudoFullscreen) {
@@ -345,17 +357,13 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
     }
     if (getFullscreenElement()) {
       const doc = document as FullscreenDocument;
+      try {
+        (screen.orientation as LockableOrientation | undefined)?.unlock?.();
+      } catch {
+        // Sin soporte para bloquear la orientación: nada que deshacer.
+      }
       if (document.exitFullscreen) void document.exitFullscreen().catch(() => {});
       else doc.webkitExitFullscreen?.();
-      return;
-    }
-
-    // En celulares y tablets la pantalla completa "real" del navegador muestra un aviso
-    // del sistema ("para salir, arrastra desde arriba…") que tapa los controles unos
-    // segundos y no se puede quitar. Ahí usamos la pantalla completa propia (por CSS).
-    const isTouchDevice = window.matchMedia?.("(pointer: coarse)").matches ?? false;
-    if (isTouchDevice) {
-      setIsPseudoFullscreen(true);
       return;
     }
 
@@ -378,6 +386,42 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
       setIsPseudoFullscreen(true);
     }
   }, [isPseudoFullscreen, revealControls]);
+
+  // ---------- Girar (solo celulares, en pantalla completa) ----------
+  // Android: se pide al navegador que gire la pantalla (screen.orientation.lock).
+  // iPhone y navegadores sin ese permiso: se gira el reproductor 90° por CSS.
+
+  const [containerSize, setContainerSize] = useState({ w: 0, h: 0 });
+  const isCssRotated = isFullscreen && isRotated;
+
+  useEffect(() => {
+    rotatedRef.current = isCssRotated;
+  }, [isCssRotated]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() =>
+      setContainerSize({ w: container.clientWidth, h: container.clientHeight }),
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  const rotateScreen = async () => {
+    revealControls();
+    const orientation = screen.orientation as LockableOrientation | undefined;
+    if (!isRotated && orientation?.lock && getFullscreenElement()) {
+      const target = orientation.type.startsWith("landscape") ? "portrait" : "landscape";
+      try {
+        await orientation.lock(target);
+        return;
+      } catch {
+        // No se permite bloquear la orientación: usamos el giro por CSS.
+      }
+    }
+    setIsRotated((value) => !value);
+  };
 
   useEffect(() => {
     const onChange = () => setIsNativeFullscreen(getFullscreenElement() === containerRef.current);
@@ -758,6 +802,20 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
       } ${isNativeFullscreen ? "h-full w-full" : ""} ${isFullscreen && !showOverlay ? "cursor-none" : ""}`}
       aria-label={`Reproductor: ${title}`}
     >
+      {/* Envoltorio que se gira 90° por CSS cuando el navegador no deja girar la pantalla */}
+      <div
+        className={`flex flex-col ${isCssRotated ? "absolute left-0 top-0" : "relative min-h-0 flex-1"}`}
+        style={
+          isCssRotated
+            ? {
+                width: containerSize.h,
+                height: containerSize.w,
+                transform: `translateX(${containerSize.w}px) rotate(90deg)`,
+                transformOrigin: "top left",
+              }
+            : undefined
+        }
+      >
       {/* Superficie del video (zoom y arrastre) */}
       <div
         ref={surfaceRef}
@@ -947,11 +1005,18 @@ export function VideoPlayer({ src, title }: { src: string; title: string }) {
                 <span className="hidden sm:inline">Velocidad</span>
                 {formatSpeed(speed)}
               </button>
+              {/* Girar: solo en pantallas táctiles (celulares y tablets) */}
+              <span className="hidden [@media(pointer:coarse)]:contents">
+                <ControlButton label={isRotated ? "Volver a girar" : "Girar pantalla"} onClick={rotateScreen}>
+                  <RotateCwSquare size={18} />
+                </ControlButton>
+              </span>
               {extraButtons}
             </div>
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
