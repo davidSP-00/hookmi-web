@@ -7,15 +7,44 @@ import { AnimalGrid } from "@/components/animals/AnimalGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { faqJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  title: "HOOKMI | Kits de crochet y amigurumi para principiantes en Perú",
+  absoluteTitle: true,
   description:
-    "Kits de crochet coleccionables para principiantes: todo el material incluido, tutoriales en video paso a paso y un pin + stickers exclusivos en cada kit. Teje tu primer amigurumi hoy, sin experiencia previa.",
-};
+    "Kits de crochet y amigurumi para principiantes en Perú: lana, crochet, relleno y tutoriales en video para aprender a tejer desde cero. Pin y stickers coleccionables en cada kit.",
+  path: "/",
+});
+
+const HOME_FAQS = [
+  {
+    question: "¿Qué es un kit de crochet?",
+    answer:
+      "Es una caja con todo lo necesario para tejer una pieza a crochet: lana, crochet (ganchillo), aguja lanera, ojos de seguridad, relleno y las instrucciones. En HOOKMI cada kit incluye además tutoriales en video paso a paso y un patrón en PDF, para que tejas tu amigurumi sin comprar nada aparte.",
+  },
+  {
+    question: "¿Puedo aprender a tejer crochet desde cero con un kit HOOKMI?",
+    answer:
+      "Sí. Nuestros kits están pensados para personas que nunca han tejido. Primero aprendes los puntos básicos con nuestros tutoriales gratis (cadeneta, anillo mágico, aumentos y disminuciones) y luego sigues el video de tu amigurumi parte por parte.",
+  },
+  {
+    question: "¿Qué es un amigurumi?",
+    answer:
+      "Amigurumi es la técnica japonesa de tejer muñequitos y animalitos a crochet, rellenos y con forma redonda. Es uno de los proyectos más populares para empezar a tejer porque usa pocos puntos y el resultado es muy satisfactorio.",
+  },
+  {
+    question: "¿Hacen envíos en Perú?",
+    answer:
+      "Sí, vendemos nuestros kits de crochet en Perú. Compras por WhatsApp y coordinamos contigo el pago y el envío a tu ciudad.",
+  },
+];
 
 export default function HomePage() {
   return (
     <div>
+      <JsonLd data={faqJsonLd(HOME_FAQS)} />
       <section className="bg-hookmi-cream">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-5 py-20 text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-hookmi-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-hookmi-ink">
@@ -23,7 +52,7 @@ export default function HomePage() {
           </span>
 
           <h1 className="max-w-2xl font-heading text-4xl font-bold text-hookmi-ink sm:text-6xl">
-            Teje, crea y colecciona tu propio amigurumi
+            Kits de crochet para tejer tu propio amigurumi desde cero
           </h1>
 
           <p className="max-w-xl text-lg text-hookmi-ink/80">
@@ -102,7 +131,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-5 py-20 text-center">
+      <section className="mx-auto max-w-3xl px-5 py-20">
+        <SectionHeading eyebrow="Preguntas frecuentes" title="Aprende a tejer crochet con tu primer kit" />
+        <div className="mt-10 flex flex-col gap-6">
+          {HOME_FAQS.map((faq) => (
+            <div key={faq.question}>
+              <h3 className="font-bold text-hookmi-ink">{faq.question}</h3>
+              <p className="mt-1 text-sm text-hookmi-ink/70">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <LinkButton href="/aprende-a-tejer-crochet" variant="outline">
+            Guía: aprende a tejer desde cero
+          </LinkButton>
+          <LinkButton href="/kits-de-crochet" variant="outline">
+            ¿Qué trae un kit de crochet?
+          </LinkButton>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-3xl px-5 pb-20 text-center">
         <h2 className="font-heading text-3xl font-bold text-hookmi-ink">
           ¿Tienes dudas antes de comprar?
         </h2>

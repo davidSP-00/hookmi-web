@@ -4,10 +4,13 @@ export function SectionHeading({
   eyebrow,
   title,
   description,
+  as: Heading = "h2",
 }: {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
+  // Usar "h1" cuando es el título principal de la página (una sola vez por página, clave para SEO).
+  as?: "h1" | "h2";
 }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
@@ -16,7 +19,7 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2 className="font-heading text-3xl font-bold text-hookmi-ink sm:text-4xl">{title}</h2>
+      <Heading className="font-heading text-3xl font-bold text-hookmi-ink sm:text-4xl">{title}</Heading>
       {description && <p className="mt-3 text-hookmi-ink/70">{description}</p>}
     </div>
   );

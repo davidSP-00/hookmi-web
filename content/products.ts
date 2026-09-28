@@ -18,7 +18,7 @@ export type Product = {
   tags?: string[];
 };
 
-const BASE_KIT_ITEMS = [
+export const BASE_KIT_ITEMS = [
   "Lana antialérgica premium",
   "Crochet ergonómico de 4mm",
   "Aguja lanera para armar",

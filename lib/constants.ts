@@ -22,8 +22,16 @@ export const SOCIAL_LINKS = {
   tiktok: "https://tiktok.com/@hookmi.pe",
 } as const;
 
+// Enlaces extra del footer: páginas pensadas para búsquedas genéricas en Google.
+export const FOOTER_SEO_LINKS = [
+  { href: "/kits-de-crochet", label: "Kits de crochet" },
+  { href: "/aprende-a-tejer-crochet", label: "Aprende a tejer crochet" },
+] as const;
+
 export const RESERVED_SLUGS = [
   "productos",
+  "kits-de-crochet",
+  "aprende-a-tejer-crochet",
   "tutoriales",
   "nosotros",
   "contacto",

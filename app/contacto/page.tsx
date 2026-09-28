@@ -3,11 +3,15 @@ import { MessageCircle } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { faqJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contacto — HOOKMI",
-  description: "Escríbenos por WhatsApp para consultas sobre productos, envíos o tus tutoriales.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Contacto: compra tu kit de crochet por WhatsApp",
+  description:
+    "Escríbenos por WhatsApp para comprar tu kit de crochet HOOKMI o resolver dudas sobre envíos en Perú y tus tutoriales de amigurumi.",
+  path: "/contacto",
+});
 
 const FAQS = [
   {
@@ -27,7 +31,9 @@ const FAQS = [
 export default function ContactoPage() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-16">
+      <JsonLd data={faqJsonLd(FAQS)} />
       <SectionHeading
+        as="h1"
         eyebrow="Contacto"
         title="Hablemos por WhatsApp"
         description="Es el canal más rápido para resolver dudas sobre productos, envíos o tus tutoriales."

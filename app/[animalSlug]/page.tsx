@@ -8,6 +8,7 @@ import { getAnimalClientSections, getAnimalSecureBySlug } from "@/content/animal
 import { basicTutorials } from "@/content/basics";
 import { verifyUnlockToken } from "@/lib/unlockToken";
 import { RESERVED_SLUGS, UNLOCK_COOKIE_PREFIX } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { DifficultyMeter } from "@/components/ui/DifficultyMeter";
 import { PasswordGateForm } from "@/components/animals/PasswordGateForm";
 import { VideoSectionAccordion } from "@/components/animals/VideoSectionAccordion";
@@ -26,10 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const animal = getAnimalBySlug(animalSlug);
   if (!animal) return {};
 
-  return {
-    title: `${animal.name} — Tutorial HOOKMI`,
-    description: animal.description,
-  };
+  return pageMetadata({
+    title: `Tutorial amigurumi ${animal.name} paso a paso a crochet`,
+    description: `Tutorial en video para tejer a ${animal.name}, el amigurumi N.º ${animal.code} de HOOKMI, paso a paso y desde cero. ${animal.description}`.slice(0, 300),
+    path: `/${animal.slug}`,
+    image: { url: animal.coverImage, alt: `Amigurumi ${animal.name} tejido a crochet` },
+  });
 }
 
 export default async function AnimalPage({ params }: Props) {

@@ -8,6 +8,9 @@ import { Badge } from "@/components/ui/Badge";
 import { DifficultyMeter } from "@/components/ui/DifficultyMeter";
 import { WhatsAppBuyButton } from "@/components/products/WhatsAppBuyButton";
 import { ProductGallery } from "@/components/products/ProductGallery";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_NAME } from "@/lib/constants";
+import { SITE_URL, absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -20,10 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = getProductBySlug(slug);
   if (!product) return {};
 
-  return {
-    title: `${product.name} — HOOKMI`,
-    description: product.shortDescription,
-  };
+  return pageMetadata({
+    title: `${product.name}: kit de crochet amigurumi para principiantes`,
+    description: `${product.shortDescription} Kit de crochet con todos los materiales y tutoriales en video para tejer desde cero. Envíos en Perú.`,
+    path: `/productos/${product.slug}`,
+    image: { url: product.images[0], width: 1400, height: 1400, alt: `Kit de crochet amigurumi ${product.name}` },
+  });
 }
 
 export default async function ProductoDetailPage({ params }: Props) {
@@ -32,12 +37,43 @@ export default async function ProductoDetailPage({ params }: Props) {
 
   if (!product) notFound();
 
+  const productUrl = absoluteUrl(`/productos/${product.slug}`);
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${productUrl}#product`,
+    name: `${product.name} – Kit de crochet amigurumi`,
+    description: product.description,
+    sku: product.id,
+    image: product.images.filter((src) => !src.endsWith(".svg")).map(absoluteUrl),
+    brand: { "@type": "Brand", name: SITE_NAME },
+    category: "Kits de crochet y amigurumi",
+    offers: {
+      "@type": "Offer",
+      url: productUrl,
+      price: product.price.toFixed(2),
+      priceCurrency: product.currency,
+      availability: product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+      areaServed: { "@type": "Country", name: "Perú" },
+      seller: { "@id": `${SITE_URL}/#organization` },
+    },
+  };
+
   return (
     <div className="mx-auto max-w-5xl px-5 py-16">
+      <JsonLd data={productJsonLd} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Inicio", path: "/" },
+          { name: "Productos", path: "/productos" },
+          { name: product.name, path: `/productos/${product.slug}` },
+        ])}
+      />
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <ProductGallery
           images={product.images}
-          alt={product.name}
+          alt={`Kit de crochet amigurumi ${product.name}`}
           overlay={
             <span className="absolute left-4 top-4 z-10 rounded-full bg-hookmi-ink px-3 py-1 text-xs font-bold text-white">
               {product.collectionNumber}
@@ -56,7 +92,12 @@ export default async function ProductoDetailPage({ params }: Props) {
             {!product.inStock && <Badge variant="ink">Agotado</Badge>}
           </div>
 
-          <h1 className="font-heading text-4xl font-bold text-hookmi-ink">{product.name}</h1>
+          <h1 className="font-heading text-4xl font-bold text-hookmi-ink">
+            {product.name}
+            <span className="mt-1 block text-lg font-semibold text-hookmi-ink/70">
+              Kit de crochet amigurumi para principiantes
+            </span>
+          </h1>
           <p className="font-heading text-2xl font-bold text-hookmi-ink">
             {formatPrice(product.price, product.currency)}
           </p>

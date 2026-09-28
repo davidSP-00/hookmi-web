@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NAV_LINKS, SITE_NAME, SOCIAL_LINKS } from "@/lib/constants";
+import { FOOTER_SEO_LINKS, NAV_LINKS, SITE_NAME, SOCIAL_LINKS } from "@/lib/constants";
 import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/icons/SocialIcons";
 
 const SOCIALS = [
@@ -15,12 +15,13 @@ export function Footer() {
         <div>
           <p className="font-heading text-xl font-bold text-hookmi-ink">{SITE_NAME}</p>
           <p className="mt-2 max-w-xs text-sm text-hookmi-ink/70">
-            Kits de crochet para principiantes, con tutoriales en video paso a paso.
+            Kits de crochet y amigurumi para principiantes en Perú, con tutoriales en video
+            para aprender a tejer desde cero.
           </p>
         </div>
 
         <nav className="flex flex-wrap gap-x-6 gap-y-2">
-          {NAV_LINKS.map((link) => (
+          {[...NAV_LINKS, ...FOOTER_SEO_LINKS].map((link) => (
             <Link
               key={link.href}
               href={link.href}

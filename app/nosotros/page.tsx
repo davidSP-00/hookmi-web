@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { Heart, PackageCheck, Video } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Nosotros — HOOKMI",
-  description: "Conoce la historia de HOOKMI y por qué creamos kits de crochet para principiantes.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Nosotros: kits de crochet para principiantes en Perú",
+  description:
+    "Conoce la historia de HOOKMI y por qué creamos kits de crochet y amigurumi para que cualquier persona aprenda a tejer desde cero.",
+  path: "/nosotros",
+});
 
 const VALUES = [
   {
@@ -29,6 +32,7 @@ export default function NosotrosPage() {
   return (
     <div className="mx-auto max-w-4xl px-5 py-16">
       <SectionHeading
+        as="h1"
         eyebrow="Nuestra historia"
         title="Tejer debería ser fácil de empezar"
         description="HOOKMI nació para acercar el crochet a cualquier persona, sin experiencia previa, con kits pensados para que tejer tu primer amigurumi sea una experiencia entretenida y sin frustraciones."
