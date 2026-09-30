@@ -4,7 +4,7 @@ import path from "node:path";
 
 // Guía genérica de "cómo leer el crochet": es la misma para todos los kits y
 // se sirve gratis, sin código de desbloqueo, igual que los videos de técnicas
-// básicas (ver app/api/tutorial-video/[id]).
+// básicas (ver content/basics.ts).
 const GUIDE_FILE = "guia-principiantes-hookmi.pdf";
 
 export async function GET() {

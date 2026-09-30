@@ -1,14 +1,12 @@
 import "server-only";
 
 // Archivo SOLO servidor: nunca lo importes desde un componente de cliente
-// ni desde `content/animals.ts`. Solo lo deben leer las Route Handlers
-// en app/api/unlock, app/api/pdf/[slug] y
-// app/api/animal-video/[slug]/[sectionId].
+// ni desde `content/animals.ts`. Solo lo deben leer app/api/unlock,
+// app/api/pdf/[slug] y app/[animalSlug]/page.tsx.
 //
-// `videoUrl` es la URL real de CloudFront: nunca se pasa tal cual a un
-// Client Component. La página arma para el cliente una versión con
-// `/api/animal-video/<slug>/<id>` (ver app/[animalSlug]/page.tsx), así el
-// link real del bucket nunca llega al HTML/RSC payload que ve el navegador.
+// `videoUrl` es la URL de CloudFront y el navegador la consume directo (sin
+// pasar por Vercel). Solo llega al HTML cuando el código ya fue validado
+// (ver app/[animalSlug]/page.tsx).
 //
 // Para generar el hash de un código nuevo:
 //   node scripts/hash-password.mjs "XXXX-XXXX"
@@ -18,7 +16,7 @@ import "server-only";
 // generarse a partir del código completo, incluyendo el guion.
 
 export type AnimalSecureSection = {
-  id: string; // usado en la URL del proxy: /api/animal-video/<slug>/<id>
+  id: string;
   title: string; // debe calzar 1:1 en orden y cantidad con `sectionsMeta` en content/animals.ts
   videoUrl: string; // URL real de CloudFront (o embed de YouTube/Vimeo mientras no haya video propio)
 };
@@ -96,27 +94,12 @@ export function getAnimalSecureBySlug(slug: string): AnimalSecure | undefined {
   return animalsSecure.find((animal) => animal.slug === slug);
 }
 
-export function getAnimalSectionVideoUrl(slug: string, sectionId: string): string | undefined {
-  return getAnimalSecureBySlug(slug)?.sections.find((section) => section.id === sectionId)?.videoUrl;
-}
-
-const PROXIED_VIDEO_HOST = "https://d38qkanw9z3wft.cloudfront.net/";
-
 export type AnimalClientSection = { title: string; videoUrl: string };
 
-// Versión segura de `sections` para pasarle a un Client Component: los
-// videos propios (CloudFront) se cambian por la ruta del proxy
-// (/api/animal-video/<slug>/<id>), nunca por la URL real del bucket. Los
-// que todavía son un placeholder de YouTube se dejan tal cual, igual que
-// antes, porque YouTube ya sirve esos links pensados para incrustarse.
+// Lo mínimo que necesita el Client Component (sin hash ni nombre del PDF).
 export function getAnimalClientSections(slug: string): AnimalClientSection[] {
   const secure = getAnimalSecureBySlug(slug);
   if (!secure) return [];
 
-  return secure.sections.map((section) => ({
-    title: section.title,
-    videoUrl: section.videoUrl.startsWith(PROXIED_VIDEO_HOST)
-      ? `/api/animal-video/${slug}/${section.id}`
-      : section.videoUrl,
-  }));
+  return secure.sections.map((section) => ({ title: section.title, videoUrl: section.videoUrl }));
 }
